@@ -1,0 +1,11 @@
+<nav>
+    <ul class="navbar">
+        <li class="menu"><a class="<%= path === '/' ? 'active' : '' %>" href="/">Home</a></li>
+        <li class="menu"><a class="<%= path === '/add' ? 'active' : '' %>" href="/add">Add</a></li>
+        <!-- <li class="menu"><a class="<%= path === '/list' ? 'active' : '' %>" href="/list">List</a></li> -->
+        <li class="menu"><a class="<%= path === '/search' ? 'active' : '' %>" href="/search">Search</a></li>
+        <li class="menu"><a class="<%= path === '/about' ? 'active' : '' %>" href="/about">About</a></li>
+        <li><input type="text" name="search" placeholder="Mit keressek?"></li>
+        <li><a href="/" class="btn-search">keress</a></li>
+    </ul>
+</nav>

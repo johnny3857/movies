@@ -1,0 +1,33 @@
+<%- include('includes/head.ejs') %>
+</head>
+<body>
+    <%- include('includes/navbar.ejs') %>
+
+    <div class="wrapper">
+        <h1><%= greeting %></h1>
+
+        <div class="sorting">
+            <h3>Number of movies: <%= movies.length %></h3>
+            <h4>rendezés:</h4>
+            <a href="/?sort=title" class="<%= sortOrder === 'title' ? 'sort-active' : '' %>">cím</a>
+            <a href="/?sort=titleEng" class="<%= sortOrder === 'titleEng' ? 'sort-active' : '' %>">angol cím</a>
+            <a href="/?sort=year" class="<%= sortOrder === 'year' ? 'sort-active' : '' %>">évszám</a>
+            <a href="/?sort=status" class="<%= sortOrder === 'status' ? 'sort-active' : '' %>">kategória</a>
+        </div>
+
+        <% if (movies.length === 0) { %>
+            <h2>There are no films in the database.</h2>
+        <% } else { %>
+            <ul>
+            <% for (let movie of movies) { %>
+                <li>title: <%= movie.title %></li>
+                <li>titleEng: <%= movie.titleEng %></li>
+                <li>year: <%= movie.year %></li>
+                <li>status: <%= movie.status %></li>
+                <br>
+            <% } %>
+            </ul>
+        <% } %>
+    </div>
+</body>
+</html>

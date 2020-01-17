@@ -1,0 +1,105 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+/********   NAVBAR   *********/
+.navbar {
+    background-color: rgb(235, 189, 75);  /*goldenrod;*/
+    color: indigo;
+    height: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.navbar li {
+    margin-left: 3rem;
+    border: 0px solid lime;
+}
+.navbar a {
+    font-size: 24px;
+    font-weight: 600;
+    border: 0px solid blue;
+}
+.navbar a:hover,
+.navbar a:active {
+    color: ivory;
+}
+.active {
+    color: ivory;
+}
+.navbar li input {
+    margin-top: 1.5rem;
+    line-height: 2rem;
+    padding-left: .5rem;
+    border: 2px solid indigo;
+    border-radius: 5px;
+}
+a.btn-search {
+    background-color: indigo;
+    color: rgb(235, 189, 75);
+    padding: .3rem .7rem;
+    border: 2px solid indigo;
+    border-radius: 1rem;
+}
+/*************************************/
+.wrapper {
+    padding: 1rem 2rem;
+}
+
+h1 {
+    color: blue;
+}
+/***********    SORTING     ***********/
+.sorting {
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    border: 0px solid red;
+}
+.sorting h3 {
+    margin-right: 3rem;
+}
+.sorting a {
+    margin-left: 1rem;
+    font-weight: 600;
+    background-color: rgb(235, 189, 75);
+    padding: .3rem .6rem;
+
+    border: 3px solid indigo;
+    border-radius: 1rem;
+}
+a.sort-active,
+.sorting a:hover {
+    background-color: indigo;
+    color: rgb(235, 189, 75);
+}
+/***********    form input styles    ***********/
+form {
+    margin-top: 2rem;
+}
+label {
+    display: block;
+    font: 1.2rem 'Fira Sans', sans-serif;
+    padding-right: 10px;
+}
+
+input {
+    margin: .5rem 0 1.5rem 0;
+    font-size: 1.2rem;
+}
+
+select {
+    font-size: 1.2rem;
+    padding: 2px 5px;
+}
+.btn-add-movie {
+    margin-left: 7rem;
+    font-size: 1.5rem;
+}

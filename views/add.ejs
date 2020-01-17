@@ -1,0 +1,32 @@
+<%- include('includes/head.ejs') %>
+</head>
+<body>
+    <%- include('includes/navbar.ejs') %>
+
+    <div class="wrapper">
+        <h1><%= greeting %></h1>
+
+        <form action="/add" method="POST">
+            <label for="title">A film címe:</label>
+            <input type="text" name="title" required size="40">
+
+            <label for="titleEng">A film angol címe:</label>
+            <input type="text" name="titleEng" required size="40">
+
+            <label for="year">A film bemutatásának éve:</label>
+            <input type="text" name="year" required size="5">
+
+            <label for="status">Válassz kategóriát:</label>
+
+            <select name="status">
+                
+                <option value="wanted">Kell</option>
+                <option value="downloaded">Letöltve</option>
+                <option value="seen">Megnézve</option>
+            </select>
+
+            <input type="submit" value="Hozzáadom" class="btn-add-movie">
+        </form>
+    </div>
+</body>
+</html>
