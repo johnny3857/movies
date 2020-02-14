@@ -39,11 +39,13 @@ app.post('/add', (req, res) => {
         });
         movies = JSON.parse(data);
         const newMovie = {
+            id: parseInt(movies[movies.length - 1].id) + 1,
             title: req.body.title,
             titleEng: req.body.titleEng,
-            year: req.body.year,
+            year: parseInt(req.body.year),
             status: req.body.status
         };
+
         movies.push(newMovie);
         moviesJson = JSON.stringify(movies);
 
@@ -57,10 +59,7 @@ app.post('/add', (req, res) => {
             console.log('OK writing file!');
             res.redirect('/');
         });
-
     });
-
-
 });
 
 // GET list route
@@ -105,7 +104,9 @@ app.get('/', (req, res) => {
 
         //console.log(req.query.sort);
         const sortOrder = req.query.sort;
-        if (sortOrder) {
+        if (sortOrder === 'year') {
+            movies.sort((a, b) => a.year - b.year);
+        } else if ((sortOrder) && sortOrder.includes('title')) {
             movies.sort((a, b) => {
                 let x = a[sortOrder].toLowerCase();
                 let y = b[sortOrder].toLowerCase();
@@ -113,11 +114,15 @@ app.get('/', (req, res) => {
                 if (x > y) return 1;
                 return 0;
             });
+        } else if ((sortOrder) && sortOrder.includes('status')) {
+            let moviesFiltered = movies.filter(function (movie) {
+                return movie.status === sortOrder.substring(6).toLowerCase();
+            });
+            movies = moviesFiltered;
         }
-        
-        movies.forEach(elem => {
+        /* movies.forEach(elem => {
             console.log(elem.title)
-        });
+        }); */
 
         res.render('list', {
             path: '/',

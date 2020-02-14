@@ -60,25 +60,47 @@ h1 {
     margin: 1rem 0;
     font-size: 1.2rem;
     display: flex;
-    align-items: center;
-    border: 0px solid red;
+    align-items: flex-start;
+    border: 0px solid greenyellow;
 }
-.sorting h3 {
-    margin-right: 3rem;
+.sorting h3, .sorting h4 {
+    margin-right: 2rem;
+    margin-top: .5rem;
 }
-.sorting a {
+.sorting > a {
     margin-left: 1rem;
     font-weight: 600;
     background-color: rgb(235, 189, 75);
     padding: .3rem .6rem;
+    color: indigo;
 
     border: 3px solid indigo;
     border-radius: 1rem;
 }
 a.sort-active,
-.sorting a:hover {
+.sorting a:hover,
+.sort-status a.sort-active {
     background-color: indigo;
     color: rgb(235, 189, 75);
+}
+.sort-status {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    font-weight: 600;
+    background-color: rgb(235, 189, 75);
+    padding: .3rem .6rem;
+    padding: 0;
+    color: indigo;
+
+    border: 3px solid indigo;
+    border-radius: 1rem;
+}
+.sort-status a {
+    color: indigo;
+    padding: .3rem 1rem;
+    text-align: center;
+    border-radius: .7rem;
 }
 /***********    form input styles    ***********/
 form {
