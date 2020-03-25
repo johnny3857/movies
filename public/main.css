@@ -6,6 +6,11 @@
     text-decoration: none;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+body {
+    max-width: 1280px;
+    margin: 0 auto 0 auto;
+}
+
 /********   NAVBAR   *********/
 .navbar {
     background-color: rgb(235, 189, 75);  /*goldenrod;*/
@@ -18,11 +23,11 @@
 }
 
 .navbar li {
-    margin-left: 3rem;
+    margin-left: 2vw;
     border: 0px solid lime;
 }
 .navbar a {
-    font-size: 24px;
+    font-size: 150%;
     font-weight: 600;
     border: 0px solid blue;
 }
@@ -34,12 +39,13 @@
     color: ivory;
 }
 .navbar li input {
-    margin-top: 1.5rem;
-    line-height: 2rem;
+    font-size: 1.2rem;
+    height: 2rem;
     padding-left: .5rem;
     border: 2px solid indigo;
     border-radius: 5px;
 }
+
 a.btn-search {
     background-color: indigo;
     color: rgb(235, 189, 75);
@@ -48,59 +54,126 @@ a.btn-search {
     border-radius: 1rem;
 }
 /*************************************/
+h1 {
+    color:indigo;
+    font-size: 150%;
+    font-weight: 600;
+    margin-left: 5vw;
+}
+
 .wrapper {
     padding: 1rem 2rem;
 }
-
-h1 {
-    color: blue;
-}
-/***********    SORTING     ***********/
-.sorting {
-    margin: 1rem 0;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: flex-start;
-    border: 0px solid greenyellow;
-}
-.sorting h3, .sorting h4 {
-    margin-right: 2rem;
-    margin-top: .5rem;
-}
-.sorting > a {
-    margin-left: 1rem;
-    font-weight: 600;
-    background-color: rgb(235, 189, 75);
-    padding: .3rem .6rem;
-    color: indigo;
-
-    border: 3px solid indigo;
+.wrapper ul {
+    border: 2px solid indigo;
     border-radius: 1rem;
 }
-a.sort-active,
-.sorting a:hover,
-.sort-status a.sort-active {
+.wrapper ul li {
+    border-bottom: 1px solid indigo;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgb(255, 255, 240);
+}
+.wrapper ul li:first-child {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+.wrapper ul li:last-child {
+    border: none;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+.wrapper ul li:nth-child(even) {
+    background-color: rgb(235, 189, 75);
+    background-color: rgb(255, 230, 130);
+}
+.wrapper ul li p {
+    padding: .2rem .8rem .3rem .8rem;
+    border: 0px solid lightgreen;
+}
+.wrapper ul li p:nth-child(1) {
+    font-weight: 600;
+    font-size: 120%;
+    padding: .5rem .8rem 0rem .8rem;
+}
+.listitem-text {
+    flex-grow: 1;
+}
+.movie-status {
+    font-weight: 400;
+    color: indigo;
+}
+.listitem-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+.edit-me, .delete-me {
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: .4rem .8rem .4rem .8rem;
+    margin-right: .8rem;
+    cursor: pointer;
+    background-color: indigo;
+    color: lightyellow;
+    border-radius: .5rem;
+}
+.delete-me {
+    background-color: mediumvioletred;
+}
+/***********    SORTING and FILTERING    ***********/
+.sorting, .filtering, .results {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.sorting p, .filtering p, .results p {
+    font-size: 120%;
+    border: 0px solid greenyellow;
+}
+.sort-group, .filter-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 1rem;
+    border: 2px solid indigo;
+    border-radius: .5rem;
+}
+.sort-button, .filter-button {
+    background-color: rgb(235, 189, 75);  /*goldenrod;*/
+    color: indigo;
+    padding: .3rem .5rem;
+    font-weight: 600;
+    font-size: 120%;
+    border-right: 2px solid indigo;
+    height: 100%;
+}
+.sort-button:first-of-type, .filter-button:first-of-type {
+    border-top-left-radius: .4rem;
+    border-bottom-left-radius: .4rem;
+}
+.sort-button:last-of-type, .filter-button:last-of-type {
+    border-top-right-radius: .4rem;
+    border-bottom-right-radius: .4rem;
+    border-right: 0;
+}
+.sort-group a:hover, .filter-group a:hover,
+.sort-group a.active, .filter-group a.active {
     background-color: indigo;
     color: rgb(235, 189, 75);
 }
-.sort-status {
-    display: flex;
-    flex-direction: column;
-    margin-left: 1rem;
-    font-weight: 600;
-    background-color: rgb(235, 189, 75);
-    padding: .3rem .6rem;
-    padding: 0;
-    color: indigo;
-
-    border: 3px solid indigo;
-    border-radius: 1rem;
-}
-.sort-status a {
-    color: indigo;
-    padding: .3rem 1rem;
-    text-align: center;
-    border-radius: .7rem;
+.sorting a.active:hover, .filtering a.active:hover {
+    cursor: default;
 }
 /***********    form input styles    ***********/
 form {
@@ -111,17 +184,140 @@ label {
     font: 1.2rem 'Fira Sans', sans-serif;
     padding-right: 10px;
 }
-
-input {
+.input-add-movie, .input-add-year {
     margin: .5rem 0 1.5rem 0;
     font-size: 1.2rem;
 }
-
+.submit-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: .5rem;
+}
 select {
     font-size: 1.2rem;
     padding: 2px 5px;
+    min-width: 10rem;
+    height: 2rem;
+}
+.add-edit-buttons {
+    display: flex;
 }
 .btn-add-movie {
-    margin-left: 7rem;
-    font-size: 1.5rem;
+    margin-left: 3rem;
+    font-size: 1.2rem;
+    height: 2rem;
 }
+button a, button a:hover, button a:active, button a:visited {
+    color: black;
+}
+
+
+/**********     rules for tablets     **********/
+@media only screen and (max-width: 700px) {
+.wrapper {
+    padding: .5rem 1rem;
+}
+.navbar {
+    height: 3rem;
+}
+.navbar a {
+    font-size: 120%;
+}
+.navbar li {
+    flex-shrink: 0;
+}
+.li-input-search {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+nav input {
+    /* position: relative; */
+    width: 80%;
+}
+a.btn-search {
+    display: none;
+}
+.wrapper ul li p {
+    padding: .4rem .8rem .1rem .8rem;
+}
+.wrapper ul li p:nth-child(1) {
+    padding: .2rem .8rem 0rem .8rem;
+}
+.listitem-buttons {
+    flex-direction: column;
+    /* justify-content: space-around; */
+    align-items: center;
+}
+.edit-me, .delete-me {
+    font-size: 1rem;
+    padding: .4rem .4rem .4rem .4rem;
+    margin: .2rem .3rem;
+}
+.input-add-movie {
+    width: 450px;
+}
+select {
+    font-size: 1.2rem;
+    padding: 2px 5px;
+    min-width: 9rem;
+}
+.btn-add-movie {
+    margin-left: 2rem;
+    font-size: 1.2rem;
+}
+
+}
+
+
+/**********     rules for mobile phones     **********/
+@media only screen and (max-width: 500px) {
+.navbar {
+    height: 3rem;
+}
+.wrapper {
+    padding: .5rem .5rem;
+}
+.sorting, .filtering, .results {
+    /*   display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 1rem; */
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0 0 .3rem 0;
+    border: 0px solid red;
+}
+.sorting p, .filtering p, .results p {
+    font-size: 100%;
+    border: 0px solid greenyellow;
+}
+.sort-group, .filter-group {
+    margin: .2rem 0 0 0;
+}
+.sort-button, .filter-button {
+    padding: .3rem .5rem;
+    font-size: 100%;
+}
+.input-add-movie {
+    width: 300px;
+}
+select {
+    font-size: 1.2rem;
+    padding: 2px 3px;
+    min-width: 8rem;
+}
+.add-edit-buttons {
+    flex-direction: column;
+}
+.btn-add-movie {
+    font-size: 1.2rem;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+}
+

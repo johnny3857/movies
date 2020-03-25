@@ -7,15 +7,15 @@
 	<div class="wrapper">
 		<h1><%= greeting %></h1>
 
-		<form action="/add" method="POST">
+		<form action="/edit?id=<%= movie._id %>" method="POST">
 			<label for="title">A film címe:</label>
-			<input class="input-add-movie" type="text" name="title" required size="40">
+			<input class="input-add-movie" type="text" name="title" required size="40" value="<%= movie.title %>">
 
 			<label for="titleEng">A film angol címe:</label>
-			<input class="input-add-movie" type="text" name="titleEng" required size="40">
+			<input class="input-add-movie" type="text" name="titleEng" required size="40" value="<%= movie.titleEng %>">
 
 			<label for="year">A film bemutatásának éve:</label>
-			<input class="input-add-year" type="text" name="year" required size="5">
+			<input class="input-add-year" type="text" name="year" required size="5" value="<%= movie.year %>">
 
 			<label for="status">Válassz kategóriát:</label>
 
@@ -27,13 +27,25 @@
 				</select>
 
 				<div class="add-edit-buttons">
-					<input type="submit" value="Hozzáadom" class="btn-add-movie">
+					<input type="submit" value="Módosítom" class="btn-add-movie">
 					<button class="btn-add-movie"><a href="/">Mégse</a></button>
 				</div>
+				
 			</div>
 			
 		</form>
 	</div>
+
+	<script>
+		let statusNames = {
+			wanted: 0,
+			downloaded: 1,
+			seen: 2
+		};
+		let statusNr = statusNames['<%= movie.status %>'];
+		let elemOpt = document.querySelectorAll('option')[statusNr];
+		elemOpt.setAttribute('selected', 'selected');
+	</script>
 </body>
 
 </html>

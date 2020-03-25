@@ -1,39 +1,44 @@
 <%- include('includes/head.ejs') %>
 </head>
+
 <body>
-    <%- include('includes/navbar.ejs') %>
+	<%- include('includes/navbar.ejs') %>
 
-    <div class="wrapper">
-        <h1><%= greeting %></h1>
+	<div class="wrapper">
 
-        <div class="sorting">
-            <h3>Filmek száma: <%= movies.length %></h3>
-            <h3>rendezés:</h3>
-            <a href="/?sort=title" class="<%= sortOrder === 'title' ? 'sort-active' : '' %>">cím</a>
-            <a href="/?sort=titleEng" class="<%= sortOrder === 'titleEng' ? 'sort-active' : '' %>">angol cím</a>
-            <a href="/?sort=year" class="<%= sortOrder === 'year' ? 'sort-active' : '' %>">évszám</a>
-            <!-- <a href="/?sort=status" class="<%= sortOrder === 'status' ? 'sort-active' : '' %>">kategória</a> -->
-            <div class="sort-status">
-                <a href="/?sort=statusWanted" class="<%= sortOrder === 'statusWanted' ? 'sort-active' : '' %>">kell</a>
-                <a href="/?sort=statusDownloaded" class="<%= sortOrder === 'statusDownloaded' ? 'sort-active' : '' %>">letöltve</a>
-                <a href="/?sort=statusSeen" class="<%= sortOrder === 'statusSeen' ? 'sort-active' : '' %>">megnézve</a>
-            </div>
-        </div>
+		<div class="sorting">
+			<p>rendezés:</p>
+			<div class="sort-group">
+				<a class="sort-button" data-sort="title" href="#">cím</a>
+				<a class="sort-button" data-sort="titleEng" href="#">eredeti</a>
+				<a class="sort-button" data-sort="year" href="#">bemutatás</a>
+				<!-- <a class="sort-button active" data-sort="none" href="#">nincs</a> -->
+			</div>
+		</div>
 
-        <% if (movies.length === 0) { %>
-            <h2>Nincs ilyen film.</h2>
-        <% } else { %>
-            <ul>
-            <% for (let movie of movies) { %>
-                <li>cím: <%= movie.title %></li>
-                <li>angol cím: <%= movie.titleEng %></li>
-                <li>év: <%= movie.year %></li>
-                <li>status: <%= movie.status %></li>
-                <li>id: <%= movie.id %></li>
-                <br>
-            <% } %>
-            </ul>
-        <% } %>
-    </div>
+		<div class="filtering">
+			<p>szűrés:</p>
+			<div class="filter-group">
+				<a class="filter-button" data-filter="wanted" href="#">kell</a>
+				<a class="filter-button" data-filter="downloaded" href="#">letöltve</a>
+				<a class="filter-button" data-filter="seen" href="#">megnézve</a>
+				<a class="filter-button active" data-filter="all" href="#">mind</a>
+			</div>
+		</div>
+
+		<div class="results">
+			<p>találatok száma: <span class="nr-of-results"></span></p>
+		</div>
+		<% if (movies.length === 0) { %>
+		<h2>Nincs ilyen film.</h2>
+		<% } else { %>
+
+		<ul class="list-movies">
+		
+		</ul>
+		<% } %>
+	</div>
+	<script src="/browser.js"></script>
 </body>
+
 </html>

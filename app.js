@@ -1,12 +1,31 @@
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs');
 const bodyParser = require('body-parser');
+const mongodb = require('mongodb');
 
 const express = require('express');
 const app = express();
+let port = process.env.PORT;
+if (port == null || port == '') {
+	port = 3000;
+};
+
+// MongoDB database connection
+let db;
+let connectionString = 'mongodb+srv://testuser:jelszo@cluster0-symjw.mongodb.net/moviesdb?retryWrites=true&w=majority';
+mongodb.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true}, function (err, client) {
+	db = client.db()
+
+	// starting HTTP server
+	const server = app.listen(port, () => {
+		console.log('Node server is running on port 3000...');
+	});
+});
 
 // registering body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
+// json parser middleware
+app.use(express.json());
 
 // setting static folder middleware
 app.use(express.static(path.join(__dirname, 'public')));
@@ -15,128 +34,102 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+// authentication middleware
+function auth (req, res, next) {
+	res.set('WWW-Authenticate', 'Basic realm="My movie app"');
+	// console.log(req.headers.authorization);
+	if (req.headers.authorization == 'Basic OmNzaXBldA==') {
+		next();
+	} else {
+		res.status(401).send('Sorry, ide be kell jelentkezni.');
+	}
+}
+
+// use auth() for all routes
+app.use(auth);
+
 /***************   ROUTES   *****************/
 
 // GET add new film route
 app.get('/add', (req, res) => {
-    res.render('add', {
-        path: '/add',
-        pageTitle: 'Add new film',
-        greeting: 'Chipper, add a new movie.'
-    })
+	res.render('add', {
+		path: '/add',
+		pageTitle: 'Új film hozzáadása',
+		greeting: 'Írj be egy új filmet!'
+	});
 });
 
 // POST add new film
 app.post('/add', (req, res) => {
-
-    fs.readFile('movies.json', (err, data) => {
-        let movies = [];
-        if (err) return res.render('error', {
-            path: '/error',
-            pageTitle: 'Error page',
-            greeting: 'Szia Csipet, baj van! Error reading file.',
-            error: err.stack
-        });
-        movies = JSON.parse(data);
-        const newMovie = {
-            id: parseInt(movies[movies.length - 1].id) + 1,
-            title: req.body.title,
-            titleEng: req.body.titleEng,
-            year: parseInt(req.body.year),
-            status: req.body.status
-        };
-
-        movies.push(newMovie);
-        moviesJson = JSON.stringify(movies);
-
-        fs.writeFile('movies.json', moviesJson, err => {
-            if (err) return res.render('error', {
-                path: '/error',
-                pageTitle: 'Error page',
-                greeting: 'Szia Csipet, baj van! Error writing file.',
-                error: err.stack
-            })
-            console.log('OK writing file!');
-            res.redirect('/');
-        });
-    });
+	db.collection('movies').insertOne({
+			title: req.body.title,
+			titleEng: req.body.titleEng,
+			year: req.body.year,
+			status: req.body.status
+		}, function () {
+			res.redirect('/');
+	});
 });
+
+// POST delete film route
+app.post('/delete', (req, res) => {
+	// console.log(req.body.id);
+	db.collection('movies').deleteOne({_id: new mongodb.ObjectId(req.body.id)}, function() {
+		// console.log('successful delete');
+		return res.redirect('/');
+	});
+});
+
+// GET edit film route
+app.get('/edit', (req, res) => {
+	db.collection('movies').find({_id: new mongodb.ObjectId(req.query.id)}).toArray(function(err, data) {
+		// console.log(data[0]);
+		res.render('edit', {
+			path: '/edit',
+			pageTitle: 'Vackorfilm szerkesztése',
+			greeting: 'Itt módosíthatod a filmet.',
+			movie: data[0]
+		});
+	})
+});
+
+// POST edit film route
+app.post('/edit', (req, res) => {
+	// console.log(req.query.id);
+	db.collection('movies').findOneAndReplace({_id: new mongodb.ObjectId(req.query.id)}, 
+	{
+		title: req.body.title,
+		titleEng: req.body.titleEng,
+		year: req.body.year,
+		status: req.body.status
+	}, function () {
+		res.redirect('/');
+	});
+});
+
 
 // GET list route
 app.get('/list', (req, res) => {
-    res.render('list', {
-        path: '/list',
-        pageTitle: 'Movie list',
-        greeting: 'Itt lehet listázni a filmeket'
-    })
-})
-
-// GET search route
-app.get('/search', (req, res) => {
-    res.render('search', {
-        path: '/search',
-        pageTitle: 'Search movies',
-        greeting: 'Itt kereshetsz a filmek között, Csipet'
-    })
-})
-
-// GET about route
-app.get('/about', (req, res) => {
-    res.render('about', {
-        path: '/about',
-        pageTitle: 'Movie Database',
-        greeting: 'Chipper & Mukker\'s personal movie database'
-    })
+	db.collection('movies').find().toArray(function (err, movies) {
+		if (err) res.send('There was an error reading from the database.');
+		// console.log(movies);
+		res.json(movies);
+	});
 });
 
-// home route
-app.get('/', (req, res) => {
-    fs.readFile('movies.json', (err, data) => {
-        let movies = [];
-        if (err) return res.render('error', {
-            path: '/error',
-            pageTitle: 'Error page',
-            greeting: 'Szia Csipet, baj van!',
-            error: err.stack
-        });
+// GET home route
+app.get('/', function (req, res) {
+	db.collection('movies').find().toArray( function (err, movies) {
+		if (err) res.send('There was an error reading from the database.');
+		// console.log(movies);
 
-        movies = JSON.parse(data);
-
-        //console.log(req.query.sort);
-        const sortOrder = req.query.sort;
-        if (sortOrder === 'year') {
-            movies.sort((a, b) => a.year - b.year);
-        } else if ((sortOrder) && sortOrder.includes('title')) {
-            movies.sort((a, b) => {
-                let x = a[sortOrder].toLowerCase();
-                let y = b[sortOrder].toLowerCase();
-                if (x < y) return -1;
-                if (x > y) return 1;
-                return 0;
-            });
-        } else if ((sortOrder) && sortOrder.includes('status')) {
-            let moviesFiltered = movies.filter(function (movie) {
-                return movie.status === sortOrder.substring(6).toLowerCase();
-            });
-            movies = moviesFiltered;
-        }
-        /* movies.forEach(elem => {
-            console.log(elem.title)
-        }); */
-
-        res.render('list', {
-            path: '/',
-            pageTitle: 'Home',
-            greeting: 'Hi Chipper!',
-            sortOrder: sortOrder,
-            movies: movies
-        });
-    })
+		const sortOrder = req.query.sort;
+		res.render('list', {
+			path: '/',
+			pageTitle: 'Vackorfilmek listája',
+			movies: movies
+		});
+	});
 });
 
 
-/******************************************* */
-// starting HTTP server
-const server = app.listen(3000, () => {
-    console.log('Node server is running on port 3000...');
-});
