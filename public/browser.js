@@ -1,13 +1,19 @@
 let sortAndFilter = {
-	sort: 'none',
+	sort: 'title',
 	filter: 'all'
 };
 let allMoviesArr = [];
+let searchObj = {
+	searching: false,
+	searchText: ''
+};
+let searchResultArr = [];
 
 document.addEventListener('click', function (e) {
 	// Delete movie button event handler
 	if (e.target.classList.contains('delete-me')) {
-		if (confirm('Tényleg töröljük?')) {
+		let movieTitle = e.target.closest('li').querySelector('.movie-title').innerHTML;
+		if (confirm(movieTitle + '\n\nTényleg töröljük?')) {
 			fetch('/delete', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -19,6 +25,7 @@ document.addEventListener('click', function (e) {
 			});
 		}
 	}
+
 	// Sort & filter buttons click event handler
 	// Update sortAndFilter global object based on button click
 	if (e.target.classList.contains('sort-button')) {
@@ -35,10 +42,25 @@ document.addEventListener('click', function (e) {
 		sortAndFilter.filter = e.target.getAttribute('data-filter');
 		populateList();
 	};
+	// Reset search field button event handler
+	if (e.target.classList.contains('btn-reset-search')) {
+		document.querySelector('.input-search').value = '';
+		searchObj.searching = false;
+		populateList();
+	};
+});
+// Search field event handler
+document.querySelector('.input-search').addEventListener('keyup', function(e) {
+	if (e.target.value.length > 2 && e.target.value.toLowerCase() !== searchObj.searchText) {
+		searchObj.searching = true;
+		searchObj.searchText = e.target.value.toLowerCase();
+		searchMovies();
+	};
 });
 /*******************************************************/
 // Fetch all movies from db and store in global allMoviesArr array
 function init () {
+	document.querySelector('.input-search').value = '';
 	fetch('/list')
 	.then((response) => {
 		return response.json();
@@ -55,12 +77,13 @@ function init () {
 
 // Fill up the movies UL with LIs in HTML
 function populateList () {
-	let sortedMoviesArr = sortFilterMovies();
+	// console.log(searchResultArr);
+	let sortedMoviesArr = sortFilterMovies(searchObj.searching ? searchResultArr : allMoviesArr);
 	let moviesList = sortedMoviesArr.map((movie) => {
 		let listItem =`
 		<li>
 			<div class="listitem-text">
-				<p>${movie.title} (${movie.year})<span class="movie-status">${movie.status}</span></p>
+				<p><span class="movie-title">${movie.title}</span> (${movie.year})<span class="movie-status">${movie.status}</span></p>
 				<p>${movie.titleEng}</p>
 			</div>
 			<div class="listitem-buttons">
@@ -78,19 +101,19 @@ function populateList () {
 };
 
 // Filter & sort movies based on sortAndFilter global object
-function sortFilterMovies () {
+function sortFilterMovies (moviesArr) {
 	let filteredMovies = [];
 	// Begin with filtering (if any)
 	if (sortAndFilter.filter === 'all') {
-		filteredMovies = allMoviesArr;
+		filteredMovies = moviesArr;
 	} else {
-		filteredMovies = allMoviesArr.filter(movie => movie.status === sortAndFilter.filter);
+		filteredMovies = moviesArr.filter(movie => movie.status === sortAndFilter.filter);
 	};
 	// Now comes the sorting
-	if (sortAndFilter.sort === 'none') {
+/* 	if (sortAndFilter.sort === 'none') {
 		// console.log(sortAndFilter);
 		return filteredMovies;
-	};
+	}; */
 	if (sortAndFilter.sort === 'title') {
 		return filteredMovies.sort(function (a, b) {
 			if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
@@ -110,6 +133,12 @@ function sortFilterMovies () {
 	};
 	// console.log(sortAndFilter);
 	// console.log(filteredMovies);
+};
+
+// Do the searching
+function searchMovies () {
+	searchResultArr = allMoviesArr.filter(movie => movie.title.toLowerCase().includes(searchObj.searchText) || movie.titleEng.toLowerCase().includes(searchObj.searchText));
+	populateList();
 };
 
 // Replace English status words with Hungarian ones

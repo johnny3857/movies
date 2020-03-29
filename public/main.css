@@ -24,7 +24,7 @@ body {
 
 .navbar li {
     margin-left: 2vw;
-    border: 0px solid lime;
+    border: 0px solid red;
 }
 .navbar a {
     font-size: 150%;
@@ -44,14 +44,16 @@ body {
     padding-left: .5rem;
     border: 2px solid indigo;
     border-radius: 5px;
+    width: 95%;
 }
 
-a.btn-search {
+a.btn-reset-search {
     background-color: indigo;
     color: rgb(235, 189, 75);
-    padding: .3rem .7rem;
+    padding: .1rem .5rem .2rem .5rem;
     border: 2px solid indigo;
-    border-radius: 1rem;
+    border-radius: 2rem;
+    cursor: pointer;
 }
 /*************************************/
 h1 {
@@ -95,6 +97,7 @@ h1 {
     border: 0px solid lightgreen;
 }
 .wrapper ul li p:nth-child(1) {
+/* .movie-title { */
     font-weight: 600;
     font-size: 120%;
     padding: .5rem .8rem 0rem .8rem;
@@ -226,19 +229,11 @@ button a, button a:hover, button a:active, button a:visited {
 .navbar a {
     font-size: 120%;
 }
-.navbar li {
-    flex-shrink: 0;
-}
 .li-input-search {
-    flex-grow: 1;
-    flex-shrink: 1;
+    width: 44vw;
 }
-nav input {
-    /* position: relative; */
-    width: 80%;
-}
-a.btn-search {
-    display: none;
+.input-search {
+    width: 100%;
 }
 .wrapper ul li p {
     padding: .4rem .8rem .1rem .8rem;
@@ -273,20 +268,11 @@ select {
 
 
 /**********     rules for mobile phones     **********/
-@media only screen and (max-width: 500px) {
-.navbar {
-    height: 3rem;
-}
+@media only screen and (max-width: 520px) {
 .wrapper {
     padding: .5rem .5rem;
 }
 .sorting, .filtering, .results {
-    /*   display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 1rem; */
     flex-direction: column;
     align-items: flex-start;
     margin: 0 0 .3rem 0;
