@@ -236,7 +236,8 @@ button a, button a:hover, button a:active, button a:visited {
     display: none;
     position: fixed;
     top: 0;
-    width: 100%; height: 100%;
+    width: 100%;
+    height: 100%;
     background-color: rgba(250, 250, 200, .7);
     border: 0px solid red;
 }
@@ -256,6 +257,7 @@ button a, button a:hover, button a:active, button a:visited {
     left: 0; right: 0;
     width: 90%;
     max-width: 800px;
+    max-height: 85vh;
     margin: 0 auto;
     top: 15vh;
     display: flex;
@@ -263,8 +265,11 @@ button a, button a:hover, button a:active, button a:visited {
     justify-content: flex-start;
     align-items: stretch;
     border-radius: 1rem;
-    border: 0px solid greenyellow;
     display: none;
+    overflow-y: auto;
+    border: 0px solid greenyellow;
+    padding: 0 .2rem .2rem .2rem;
+
 }
 .tmdb-popup div {
     border: 0px solid magenta;
@@ -285,18 +290,19 @@ button a, button a:hover, button a:active, button a:visited {
 .tmdb-year {
     font-size: 120%;
     font-weight: 600;
-    padding-left: 1rem; padding-bottom: .1rem;
-    flex: 1 0 auto;
+    padding-left: 1rem;
 }
+.tmdb-ty { flex: 1 1 auto; }
 .tmdb-close {
-    font-size: 200%;
+    font-size: 180%;
     font-weight: 800;
     align-self: flex-start;
     cursor: pointer;
-    padding: .1rem .7rem 0 .3rem;
+    padding: 0 .7rem 0 .3rem;
     color: rgb(235, 189, 75);
+    border: 0px solid red;
 }
-.tmdb-close:hover { color: white; }
+.tmdb-close:hover { color: white; width: 10rem;}
 .tmdb-titleOrig {
     font-size: 120%;
     padding: .3rem 1rem;
@@ -402,12 +408,6 @@ select {
     margin: .2rem .3rem;
     border-radius: 5px;
 }
-/* .edit-me {
-    margin: .1rem .3rem 0 0;
-}
-.delete-me {
-    margin: .2 .3rem 0 0;
-} */
 .btn-edit-me, .btn-delete-me {
     width: 22px;
 }
@@ -429,10 +429,21 @@ select {
 }
 /*************    TMDB popup    **************/
 .tmdb-popup {
-    top: 8vh;
+    top: 6vh;
+    max-height: 90vh;
 }
+.tmdb-first-row { padding-top: .2rem;}
 .tmdb-poster {
-    width: 25vw;
+    width: 30vw;
 }
+.tmdb-title { font-size: 120%; }
+.tmdb-year { font-size: 100%; }
+.tmdb-titleOrig { font-size: 100%; }
+.tmdb-tg { font-size: 90%; }
+.tmdb-plot-text { font-size: 85%; }
+.tmdb-director { font-size: 90%; }
+.tmdb-stars { font-size: 80%; }
 }
+
+
 
