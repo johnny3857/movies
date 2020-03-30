@@ -127,9 +127,13 @@ h1 {
     background-color: indigo;
     color: lightyellow;
     border-radius: .5rem;
+
 }
 .delete-me {
     background-color: mediumvioletred;
+}
+.btn-edit-me, .btn-delete-me {
+    width: 30px;
 }
 /***********    SORTING and FILTERING    ***********/
 .sorting, .filtering, .results {
@@ -230,11 +234,20 @@ button a, button a:hover, button a:active, button a:visited {
 /********     TMDB popup styles     *********/
 .tmdb-wrapper {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100%; height: 100%;
     background-color: rgba(250, 250, 200, .7);
     border: 0px solid red;
+}
+.tmdb-spinner {
+    width: 20vw; height: 20vw;
+    margin-left: 40vw;
+    margin-top: 40vh;
+    border: 0px solid red;
+}
+.tmdb-spinner img {
+    width: 100%;
 }
 .tmdb-popup {
     position: relative;
@@ -251,7 +264,7 @@ button a, button a:hover, button a:active, button a:visited {
     align-items: stretch;
     border-radius: 1rem;
     border: 0px solid greenyellow;
-    /* display: none; */
+    display: none;
 }
 .tmdb-popup div {
     border: 0px solid magenta;
@@ -300,6 +313,7 @@ button a, button a:hover, button a:active, button a:visited {
 }
 .tmdb-stars { padding-bottom: .5rem; }
 .tmdb-tg, .tmdb-director { background-color: rgba(100, 100, 100, 0.8); }
+
 /**********     rules for tablets     **********/
 @media only screen and (max-width: 700px) {
 .wrapper {
@@ -324,14 +338,18 @@ button a, button a:hover, button a:active, button a:visited {
     padding: .2rem .8rem 0rem .8rem;
 }
 .listitem-buttons {
-    flex-direction: column;
+    /* flex-direction: column; */
     /* justify-content: space-around; */
     align-items: center;
 }
 .edit-me, .delete-me {
     font-size: 1rem;
-    padding: .4rem .4rem .4rem .4rem;
+    padding: .3rem .4rem;
     margin: .2rem .3rem;
+}
+.btn-edit-me, .btn-delete-me {
+    width: 22px;
+    height: 22px;
 }
 .input-add-movie {
     width: 450px;
@@ -373,6 +391,25 @@ select {
 .sort-button, .filter-button {
     padding: .3rem .5rem;
     font-size: 100%;
+}
+
+.listitem-buttons {
+    flex-direction: column;
+}
+
+.edit-me, .delete-me {
+    padding: .3rem .3rem .1rem .3rem;
+    margin: .2rem .3rem;
+    border-radius: 5px;
+}
+/* .edit-me {
+    margin: .1rem .3rem 0 0;
+}
+.delete-me {
+    margin: .2 .3rem 0 0;
+} */
+.btn-edit-me, .btn-delete-me {
+    width: 22px;
 }
 .input-add-movie {
     width: 300px;

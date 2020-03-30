@@ -15,6 +15,9 @@ if (port == null || port == '') {
 let db;
 let connectionString = `mongodb+srv://${myData.mongoUser}:${myData.mongoPwd}@cluster0-symjw.mongodb.net/moviesdb?retryWrites=true&w=majority`;
 mongodb.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true}, function (err, client) {
+	if (err) {
+		console.log('Hoppá, mongoDB hiba van!\nError: ' + err);
+	};
 	db = client.db()
 
 	// starting HTTP server

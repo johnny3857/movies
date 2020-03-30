@@ -12,13 +12,14 @@ init();
 
 document.addEventListener('click', function (e) {
 	// Delete movie button event handler
-	if (e.target.classList.contains('delete-me')) {
+	if (e.target.classList.contains('delete-me') || e.target.classList.contains('btn-delete-me')) {
 		let movieTitle = e.target.closest('li').querySelector('.movie-title').innerHTML;
 		if (confirm(movieTitle + '\n\nTényleg töröljük?')) {
+			const anchorDelete = e.target.closest('div').querySelector('.delete-me');
 			fetch('/delete', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ id: e.target.getAttribute('data-id') })
+				body: JSON.stringify({ id: anchorDelete.getAttribute('data-id') })
 			}).then((data) => {
 				window.location.href = "/";
 			}).catch((error) => {
@@ -76,6 +77,7 @@ function init () {
 			searchMovies();
 		};
 	});
+
 	// Reset search field value
 	document.querySelector('.input-search').value = '';
 };
@@ -115,8 +117,8 @@ function populateList () {
 				<p>${movie.titleEng}</p>
 			</div>
 			<div class="listitem-buttons">
-				<a class="edit-me" href="/edit?id=${movie._id}">módosít</a>
-				<a data-id="${movie._id}" class="delete-me">töröl</a>
+				<a class="edit-me" href="/edit?id=${movie._id}"><img class="btn-edit-me" src="edit-icon.gif" alt="edit button"></a>
+				<a data-id="${movie._id}" class="delete-me"><img class="btn-delete-me" src="delete-icon.gif" alt="delete button"></a>
 			</div>
 		</li>`;
 		return listItem;
@@ -188,17 +190,25 @@ function replaceStatus() {
 
 // Close the TMDB movie info popup
 function closeTmdbPopup () {
+	document.querySelector('.tmdb-popup').style.display = 'none';
+	document.querySelector('.tmdb-spinner').style.display = 'block';
 	document.querySelector('.tmdb-wrapper').style.display = 'none';
 };
 
 function getMovieInfo (tmdbid) {
+	document.querySelector('.tmdb-popup').style.display = 'none';
+	document.querySelector('.tmdb-spinner').style.display = 'block';
+	document.querySelector('.tmdb-wrapper').style.display = 'block';
+
 	let movieUrl = `https://api.themoviedb.org/3/movie/${tmdbid}?api_key=44e45b401447defd78533a2105a91b82&language=hu`;
 	fetch(movieUrl)
 	.then(response => response.json())
 	.then(movieInfo => {
 		// console.log(movieInfo);
-		// display and populate TMDB popup with movie data
-		document.querySelector('.tmdb-wrapper').style.display = 'block';
+		// Display and populate TMDB popup with movie data
+		document.querySelector('.tmdb-spinner').style.display = 'none';
+		document.querySelector('.tmdb-popup').style.display = 'block';
+
 		document.querySelector('.tmdb-title').innerHTML = movieInfo.title;
 		document.querySelector('.tmdb-year').innerHTML = `(${movieInfo.release_date.substr(0, 4)})`;
 		document.querySelector('.tmdb-titleOrig').innerHTML = movieInfo.original_title;
@@ -227,11 +237,14 @@ function getMovieInfo (tmdbid) {
 		creditsInfo.cast.sort((a, b) => {
 			return a.order - b.order;
 		})
-		let actors = creditsInfo.cast.map(actor => actor.name)
+		let actors = creditsInfo.cast.map(actor => actor.name).slice(0, 10);
 		document.querySelector('.tmdb-stars').innerHTML = `szereplők: ${actors.join(', ')}`;
 	})
 	.catch((err) => {
 		alert('Hohó, valami hiba történt!\n' + err);
+		closeTmdbPopup();
 	});
+ 
+
 };
 
