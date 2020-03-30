@@ -2,7 +2,7 @@
 </head>
 
 <body>
-	<%- include('includes/navbar.ejs') %>
+	<%- include('includes/navbar-add.ejs') %>
 
 	<div class="wrapper">
 		<h1><%= greeting %></h1>
@@ -11,12 +11,20 @@
 			<label for="title">A film címe:</label>
 			<input class="input-add-movie" type="text" name="title" required size="40">
 
-			<label for="titleEng">A film angol címe:</label>
+			<label for="titleEng">A film eredeti címe:</label>
 			<input class="input-add-movie" type="text" name="titleEng" required size="40">
 
-			<label for="year">A film bemutatásának éve:</label>
-			<input class="input-add-year" type="text" name="year" required size="5">
-
+			<div class="input-add-yeartmdb">
+				<div>
+					<label for="year">A bemutatás éve:</label>
+					<input class="input-add-year" type="text" name="year" required size="5">
+				</div>
+				<div>
+					<label for="tmdbid">TMDB id:</label>
+					<input class="input-add-tmdbid" type="text" name="tmdbid" size="8">
+				</div>
+			</div>
+			
 			<label for="status">Válassz kategóriát:</label>
 
 			<div class="submit-buttons">

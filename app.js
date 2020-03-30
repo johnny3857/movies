@@ -2,6 +2,7 @@ const path = require('path');
 // const fs = require('fs');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
+const myData = require('./config.js');
 
 const express = require('express');
 const app = express();
@@ -12,7 +13,7 @@ if (port == null || port == '') {
 
 // MongoDB database connection
 let db;
-let connectionString = 'mongodb+srv://testuser:jelszo@cluster0-symjw.mongodb.net/moviesdb?retryWrites=true&w=majority';
+let connectionString = `mongodb+srv://${myData.mongoUser}:${myData.mongoPwd}@cluster0-symjw.mongodb.net/moviesdb?retryWrites=true&w=majority`;
 mongodb.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true}, function (err, client) {
 	db = client.db()
 
@@ -65,7 +66,8 @@ app.post('/add', (req, res) => {
 			title: req.body.title,
 			titleEng: req.body.titleEng,
 			year: req.body.year,
-			status: req.body.status
+			status: req.body.status,
+			tmdbid: req.body.tmdbid
 		}, function () {
 			res.redirect('/');
 	});
@@ -95,13 +97,14 @@ app.get('/edit', (req, res) => {
 
 // POST edit film route
 app.post('/edit', (req, res) => {
-	// console.log(req.query.id);
+	// console.log(req.body);
 	db.collection('movies').findOneAndReplace({_id: new mongodb.ObjectId(req.query.id)}, 
 	{
 		title: req.body.title,
 		titleEng: req.body.titleEng,
 		year: req.body.year,
-		status: req.body.status
+		status: req.body.status,
+		tmdbid: req.body.tmdbid
 	}, function () {
 		res.redirect('/');
 	});
