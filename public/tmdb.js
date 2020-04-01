@@ -63,7 +63,7 @@ function getMovieInfo(tmdbid) {
 			closeTmdbPopup();
 		});
 };
-
+/************************************************************************************/
 // Search for movies with TMDB API on Add Movie page
 function searchTMDB () {
 	// Get movie title search string from input boxes if not empty
@@ -93,23 +93,48 @@ function searchTMDB () {
 		document.querySelector('.search-spinner').style.display = 'none';
 		document.querySelector('.search-popup').style.display = 'block';
 		// Populate search popup with results
+		let resultTab = `<div class="search-tab">
+							<div class="search-res-nr">találatok: ${movieResults.total_results}</div>
+							<div class="search-res-pages">
+								<div class="search-res-prev"><<</div>
+								<div class="search-res-pageNr">oldal: ${movieResults.page} / ${movieResults.total_pages}</div>
+								<div class="search-res-next">>></div>
+							</div>
+							<div class="search-res-close">&times;</div>
+						</div>`;
+
 		let resultList = movieResults.results.map((movie) => {
 			let listItem =`
 			<div class="search-li">
 				<div class="search-text">
 					<div class="search-ty"><span class="search-title">${movie.title}</span><span class="search-year">(${movie.release_date.slice(0, 4)})</span></div>
 					<div class="search-titleOrig">${movie.original_title}</div>
+					<div class="search-btns">
+						<div class="search-btn-info">info</div>
+						<div class="search-btn-add">hozzáad</div>
+					</div>
 				</div>
-				<div class="search-image"><img src="http://image.tmdb.org/t/p/w92${movie.poster_path}" alt="${movie.title}"></div>
+				<div class="search-image"><img src="http://image.tmdb.org/t/p/w92${movie.poster_path}" alt="<->"></div>
 			</div>`;
 			return listItem;
 		}).join('');
 		// console.log(resultList);
-		document.querySelector('.search-popup').innerHTML = resultList;
+		document.querySelector('.search-popup').innerHTML = resultTab + resultList;
+		
+		// Register search popup click handlers after DOM has been generated
+		document.querySelector('.search-res-close').addEventListener('click', closeSearchPopup);
 
 	})
 	.catch(err => {
 		console.log(err);
+		closeSearchPopup();
 	})
 };
+
+function closeSearchPopup(e) {
+	document.querySelector('.search-popup').style.display = 'none';
+	document.querySelector('.search-spinner').style.display = 'block';
+	document.querySelector('.search-wrapper').style.display = 'none';
+}
+
 
