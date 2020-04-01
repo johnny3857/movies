@@ -42,8 +42,8 @@
 		</form>
 	</div>
 
-	<div class="search-wrapper">
-		<div class="search-spinner">
+	<div class="tmdb-wrapper">
+		<div class="tmdb-spinner">
 			<img src="spinner.gif" alt="spinner">
 		</div>
 		<div class="search-popup">
@@ -126,7 +126,28 @@
 				
 		</div>
 			
-	
+		<!-- TMDB info popup upon search popup - same as tmdb-popup on movie list page -->
+		<div class="tmdb-popup">
+			<div class="tmdb-first-row">
+				<div class="tmdb-ty"><span class="tmdb-title">title</span><span class="tmdb-year">(year)</span></div>
+			</div>
+			
+			<div class="tmdb-titleOrig">original title</div>
+			<div class="tmdb-tg">
+				<p><span class="tmdb-runtime">playing time - </span><span class="tmdb-genre"> genre1, genre2, genre3</span></p>
+			</div>
+			
+			<div class="tmdb-plot">
+				<p><!--img class="tmdb-image" src="http://image.tmdb.org/t/p/w154/5yO1zsFjwcchHaIIjhZ7UT3KQcj.jpg" alt="Redl ezredes"-->
+					<img class="tmdb-poster" src="" alt="[-]"><span class="tmdb-plot-text">story overview</span></p>
+			</div>
+			
+			<div class="tmdb-director">rendező</div>
+			<div class="tmdb-stars">szereplők</div>
+
+		</div>
+
+
 	</div>
 	<script src="/add.js"></script>
 	<script src="/tmdb.js"></script>

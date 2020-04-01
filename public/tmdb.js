@@ -2,16 +2,21 @@
 /***********        TMDB features        ***********/
 
 // Close the TMDB movie info popup (& reset spinner)
-function closeTmdbPopup() {
+function closeTmdbPopup(searchFlag) {
 	document.querySelector('.tmdb-popup').style.display = 'none';
-	document.querySelector('.tmdb-spinner').style.display = 'block';
-	document.querySelector('.tmdb-wrapper').style.display = 'none';
+	if (searchFlag == false) {
+		document.querySelector('.tmdb-spinner').style.display = 'block';
+		document.querySelector('.tmdb-wrapper').style.display = 'none';
+	} else {
+		document.querySelector('.search-popup').style.display = 'block';
+	};
 };
 
 // Fetch and display movie info
-function getMovieInfo(tmdbid) {
+function getMovieInfo(tmdbid, searchFlag) {
 	// Display popup wrapper and spinner
 	document.querySelector('.tmdb-popup').style.display = 'none';
+	if (searchFlag) document.querySelector('.search-popup').style.display = 'none';
 	document.querySelector('.tmdb-spinner').style.display = 'block';
 	document.querySelector('.tmdb-wrapper').style.display = 'block';
 	// Fetch movie info from TMDB API
@@ -27,7 +32,7 @@ function getMovieInfo(tmdbid) {
 			document.querySelector('.tmdb-title').innerHTML = movieInfo.title;
 			document.querySelector('.tmdb-year').innerHTML = `(${movieInfo.release_date.substr(0, 4)})`;
 			document.querySelector('.tmdb-titleOrig').innerHTML = movieInfo.original_title;
-			document.querySelector('.tmdb-runtime').innerHTML = `${movieInfo.runtime} perc - `;
+			document.querySelector('.tmdb-runtime').innerHTML = `${movieInfo.runtime || '?'} perc - `;
 			let genre = [];
 			movieInfo.genres.forEach(item => genre.push(item.name));
 			document.querySelector('.tmdb-genre').innerHTML = genre.join(', ').toLowerCase();
@@ -56,11 +61,13 @@ function getMovieInfo(tmdbid) {
 			// Fill in actors
 			document.querySelector('.tmdb-stars').innerHTML = `szereplők: ${actors.join(', ')}`;
 			// Extra: set popup close click handler
-			document.querySelector('.tmdb-popup').addEventListener('click', closeTmdbPopup);
+			document.querySelector('.tmdb-popup').addEventListener('click', e => {
+				closeTmdbPopup(searchFlag);
+			});
 		})
 		.catch((err) => {
 			alert('Hohó, valami hiba történt!\n' + err);
-			closeTmdbPopup();
+			closeTmdbPopup(searchFlag);
 		});
 };
 /************************************************************************************/
@@ -79,18 +86,26 @@ function searchTMDB () {
 	let searchText = (inputTitle.value.length > 2) ? inputTitle.value : inputTitleOrig.value;
 
 	// Display wrapper and spinner
-	document.querySelector('.search-wrapper').style.display = 'block';
+	document.querySelector('.tmdb-wrapper').style.display = 'block';
 	document.querySelector('.search-popup').style.display = 'none';
-	document.querySelector('.search-spinner').style.display = 'block';
+	document.querySelector('.tmdb-popup').style.display = 'none';
+	document.querySelector('.tmdb-spinner').style.display = 'block';
 	
 	//Send query to server
 	fetch('/searchtmdb?searchtext=' + searchText)
 	.then(response => response.json())
 	.then(movieResults => {
-		// console.log(movieResults);
-		if (movieResults.error) return alert('Hiba a TMDB keresés közben.');
+		// Alert if error
+		if (movieResults.error) {
+			document.querySelector('.tmdb-wrapper').style.display = 'none';
+			return alert('Hiba a TMDB keresés közben.');
+		};
+		if (movieResults.total_results == 0) {
+			document.querySelector('.tmdb-wrapper').style.display = 'none';
+			return alert('Sajnálom.\n\nNincs találat.');
+		}; 
 		// Hide spinner & display TMDB search popup
-		document.querySelector('.search-spinner').style.display = 'none';
+		document.querySelector('.tmdb-spinner').style.display = 'none';
 		document.querySelector('.search-popup').style.display = 'block';
 		// Populate search popup with results
 		let resultTab = `<div class="search-tab">
@@ -110,7 +125,7 @@ function searchTMDB () {
 					<div class="search-ty"><span class="search-title">${movie.title}</span><span class="search-year">(${movie.release_date.slice(0, 4)})</span></div>
 					<div class="search-titleOrig">${movie.original_title}</div>
 					<div class="search-btns">
-						<div class="search-btn-info">info</div>
+						<div class="search-btn-info" data-tmdbid="${movie.id}">info</div>
 						<div class="search-btn-add">hozzáad</div>
 					</div>
 				</div>
@@ -122,8 +137,14 @@ function searchTMDB () {
 		document.querySelector('.search-popup').innerHTML = resultTab + resultList;
 		
 		// Register search popup click handlers after DOM has been generated
+		// CLOSE button
 		document.querySelector('.search-res-close').addEventListener('click', closeSearchPopup);
-
+		// INFO button click handler (with search flag = TRUE)
+		document.querySelectorAll('.search-btn-info').forEach(btn => btn.addEventListener('click', e => {
+			getMovieInfo(e.target.getAttribute('data-tmdbid'), true);
+		}));
+		// ADD button
+		document.querySelectorAll('.search-btn-add').forEach(btn => btn.addEventListener('click', fillAddForm));
 	})
 	.catch(err => {
 		console.log(err);
@@ -133,8 +154,23 @@ function searchTMDB () {
 
 function closeSearchPopup(e) {
 	document.querySelector('.search-popup').style.display = 'none';
-	document.querySelector('.search-spinner').style.display = 'block';
-	document.querySelector('.search-wrapper').style.display = 'none';
+	document.querySelector('.tmdb-spinner').style.display = 'block';
+	document.querySelector('.tmdb-wrapper').style.display = 'none';
 }
+// Fill in Add New Movie form with data from search result list
+function fillAddForm (e) {
+	const containerElem = e.target.parentElement.parentElement;
+	const movieTitle = containerElem.querySelector('.search-title').textContent;
+	const movieTitleOrig = containerElem.querySelector('.search-titleOrig').textContent;
+	const movieYear = containerElem.querySelector('.search-year').textContent.slice(1, 5);
+	const movieTmdbId = containerElem.querySelector('.search-btn-info').getAttribute('data-tmdbid');
 
+	closeSearchPopup();
+
+	document.querySelector('.input-add-title').value = movieTitle;
+	document.querySelector('.input-add-titleOrig').value = movieTitleOrig;
+	document.querySelector('.input-add-year').value = movieYear;
+	document.querySelector('.input-add-tmdbid').value = movieTmdbId;
+	return;
+};
 

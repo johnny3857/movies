@@ -233,7 +233,7 @@ button a, button a:hover, button a:active, button a:visited {
 
 /********************************************/
 /********     TMDB popup styles     *********/
-.tmdb-wrapper, .search-wrapper {
+.tmdb-wrapper {
 	display: none;
 	position: fixed;
 	top: 0; bottom: 0;
@@ -241,14 +241,14 @@ button a, button a:hover, button a:active, button a:visited {
 	background-color: rgba(250, 250, 200, .7);
 	border: 0px solid red;
 }
-.tmdb-spinner, .search-spinner {
+.tmdb-spinner {
 	width: 20vw; height: 20vw;
 	margin-left: 40vw;
 	margin-top: 40vh;
 	border: 0px solid red;
 	/* display: none; */
 }
-.tmdb-spinner img, .search-spinner img {
+.tmdb-spinner img {
 	width: 100%;
 }
 .tmdb-popup, .search-popup {
@@ -256,8 +256,8 @@ button a, button a:hover, button a:active, button a:visited {
 	position: relative;
 	background-color: rgba(40, 40, 40, .9);
 	color: ivory;
-	width: 90%;
-	max-width: 800px;
+	
+	max-width: 700px;
 	top: 15vh;
 	max-height: 80vh;
 	margin: 0 auto;
@@ -269,12 +269,16 @@ button a, button a:hover, button a:active, button a:visited {
 	border-radius: 1rem;
 	overflow-y: auto;
 	border: 0px solid greenyellow;
+	
+}
+.tmdb-popup {
+	width: 90vw;
 	padding: .2rem .2rem .2rem .2rem;
+	padding: 0;
 }
 .tmdb-popup div, .search-popup div {
 	border: 0px solid magenta;
 }
-
 .tmdb-title {
     font-size: 150%;
     font-weight: 600;
@@ -285,20 +289,24 @@ button a, button a:hover, button a:active, button a:visited {
     padding-left: 1rem;
 }
 /* .tmdb-ty { flex: 1 1 auto; } */
-.tmdb-ty { padding-left: 1rem; }
+.tmdb-ty { padding: .2rem .2rem 0 1rem; }
 .tmdb-titleOrig {
     font-size: 120%;
-    padding: .3rem 1rem;
+    padding: .2rem 1rem;
 }
 .tmdb-tg, .tmdb-director, .tmdb-stars {
     padding: .3rem 1rem .3rem 1rem;
 }
 .tmdb-tg { font-weight: 600; }
-.tmdb-plot { text-align: justify; padding: .3rem .5rem;}
-.tmdb-plot p { overflow: auto; }
+.tmdb-plot {
+	text-align: justify;
+	padding: .3rem .5rem;
+	min-height: 229px;
+}
+
 .tmdb-poster {
     float: right;
-    padding: 0 0 .5rem 1rem;
+    padding: 0 0 .5rem .5rem;
 }
 .tmdb-stars { padding-bottom: .5rem; }
 .tmdb-tg, .tmdb-director { background-color: rgba(100, 100, 100, 0.8); }
@@ -308,9 +316,8 @@ button a, button a:hover, button a:active, button a:visited {
 .search-popup {
 	/* top: 12vh; */
 	width: 70vw;
-	max-width: 700px;
-	margin: auto;
-	max-height: 80%;
+	/* margin: auto; */
+	max-height: 80vh;
 	padding: 0;
 }
 .search-tab {
@@ -498,12 +505,14 @@ select {
 	max-height: 85vh;
 }
 .tmdb-first-row { padding-top: .2rem;}
-.tmdb-poster { width: 30vw; }
 .tmdb-title { font-size: 120%; }
 .tmdb-year { font-size: 100%; }
 .tmdb-titleOrig { font-size: 100%; }
 .tmdb-tg { font-size: 90%; }
 .tmdb-plot-text { font-size: 85%; }
+.tmdb-poster { width: 30vw; }
+/*   1.5 x .tmdb-poster width !!   */
+.tmdb-plot { min-height: 45vw; }
 .tmdb-director { font-size: 90%; }
 .tmdb-stars { font-size: 80%; }
 /**************      TMDB search popup     ***************/
