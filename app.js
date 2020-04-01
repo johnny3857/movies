@@ -1,5 +1,6 @@
 const path = require('path');
 // const fs = require('fs');
+const request = require('request');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
 const myData = require('./config.js');
@@ -51,8 +52,24 @@ function auth (req, res, next) {
 
 // use auth() for all routes
 app.use(auth);
+/***********************************************************/
+/**********************   ROUTES   *************************/
 
-/***************   ROUTES   *****************/
+// GET list route
+app.get('/searchtmdb', (req, res) => {
+	// console.log(req.query.searchtext);
+	const searchText = encodeURIComponent(req.query.searchtext);
+	const tmdbUrl = `https://api.themoviedb.org/3/search/movie?api_key=${myData.tmdbAPIKey}&language=hu&query=${searchText}&page=1&include_adult=false`;
+	request({ url: tmdbUrl, json: true }, (err, response) => {
+		if (err) {
+			// console.log(err);
+			return res.json({error: 'Error'});
+		};
+		// console.log(response.body);
+		res.json(response.body);
+	});
+	
+});
 
 // GET add new film route
 app.get('/add', (req, res) => {
@@ -117,7 +134,7 @@ app.post('/edit', (req, res) => {
 // GET list route
 app.get('/list', (req, res) => {
 	db.collection('movies').find().toArray(function (err, movies) {
-		if (err) res.send('There was an error reading from the database.');
+		if (err) res.send('There was an error reading from the database: ' + err);
 		// console.log(movies);
 		res.json(movies);
 	});
@@ -126,10 +143,9 @@ app.get('/list', (req, res) => {
 // GET home route
 app.get('/', function (req, res) {
 	db.collection('movies').find().toArray( function (err, movies) {
-		if (err) res.send('There was an error reading from the database.');
+		if (err) res.send('There was an error reading from the database: ' + err);
 		// console.log(movies);
 
-		const sortOrder = req.query.sort;
 		res.render('list', {
 			path: '/',
 			pageTitle: 'Vackorfilmek listája',

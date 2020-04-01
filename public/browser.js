@@ -10,8 +10,9 @@ let searchObj = {
 let searchResultArr = [];
 init();
 
+// Click handlers attached to global document object
 document.addEventListener('click', function (e) {
-	// Delete movie button event handler
+	// Delete movie button click handler
 	if (e.target.classList.contains('delete-me') || e.target.classList.contains('btn-delete-me')) {
 		let movieTitle = e.target.closest('li').querySelector('.movie-title').innerHTML;
 		if (confirm(movieTitle + '\n\nTényleg töröljük?')) {
@@ -28,7 +29,7 @@ document.addEventListener('click', function (e) {
 		}
 	}
 
-	// Sort & filter buttons click event handler
+	// Sort & filter buttons click handlers
 	// Update sortAndFilter global object based on button click
 	if (e.target.classList.contains('sort-button')) {
 		if (e.target.classList.contains('active')) return;
@@ -44,7 +45,7 @@ document.addEventListener('click', function (e) {
 		sortAndFilter.filter = e.target.getAttribute('data-filter');
 		populateList();
 	};
-	// Reset search field button event handler
+	// Reset search field button click handler
 	if (e.target.classList.contains('btn-reset-search')) {
 		document.querySelector('.input-search').value = '';
 		searchObj.searching = false;
@@ -69,7 +70,7 @@ function init () {
 	.catch((error) => {
 		alert('Valami hiba van. Később próbáld újra!\n\nError: ' + error);
 	});
-	// Search field event handler
+	// Search field keyup handler
 	document.querySelector('.input-search').addEventListener('keyup', function(e) {
 		if (e.target.value.length > 2 && e.target.value.toLowerCase() !== searchObj.searchText) {
 			searchObj.searching = true;
@@ -81,15 +82,16 @@ function init () {
 	// Reset search field value
 	document.querySelector('.input-search').value = '';
 };
-// Initialization that can only run after fetching movies from server
+// Initialization that can only run after fetching movies list from server
 function initAfterFetch() {
+	// Movies listitem click handler
 	const listitemsArr = document.querySelectorAll('.listitem-text');
 	listitemsArr.forEach(listitem => {
 		listitem.removeEventListener('click', listitemClickHandler);
 		listitem.addEventListener('click', listitemClickHandler);
-	}); 
+	});
 };
-// Movie listitem event handler
+// Movie listitem click handler
 function listitemClickHandler (e) {
 	// Read out TMDB id from listitem data-tmdbid
 	const tmdbid = this.getAttribute('data-tmdbid');
@@ -98,13 +100,12 @@ function listitemClickHandler (e) {
 		alert('Ehhez a filmhez nincs megadva TMDB azonosító.');
 		return;
 	};
-	// Otherwise fetch movie data from tmdb API
+	// Otherwise fetch and display movie data from tmdb API
 	getMovieInfo(tmdbid);
-	// document.querySelector('.tmdb-wrapper').style.display = 'block';
-	// Display fetched TMDB movie data in popup
 };
 
-/****************************************************************************/
+/***************************************************************************/
+/***************************************************************************/
 // Fill up the movies UL with LIs in HTML
 function populateList () {
 	// console.log(searchResultArr);
@@ -184,67 +185,5 @@ function replaceStatus() {
 	statusArr.forEach((item) => {
 		item.innerHTML = ' - ' + statusNames[item.innerHTML];
 	});
-};
-/***************************************************/
-/***********        TMDB features        ***********/
-
-// Close the TMDB movie info popup
-function closeTmdbPopup () {
-	document.querySelector('.tmdb-popup').style.display = 'none';
-	document.querySelector('.tmdb-spinner').style.display = 'block';
-	document.querySelector('.tmdb-wrapper').style.display = 'none';
-};
-
-function getMovieInfo (tmdbid) {
-	document.querySelector('.tmdb-popup').style.display = 'none';
-	document.querySelector('.tmdb-spinner').style.display = 'block';
-	document.querySelector('.tmdb-wrapper').style.display = 'block';
-
-	let movieUrl = `https://api.themoviedb.org/3/movie/${tmdbid}?api_key=44e45b401447defd78533a2105a91b82&language=hu`;
-	fetch(movieUrl)
-	.then(response => response.json())
-	.then(movieInfo => {
-		// console.log(movieInfo);
-		// Display and populate TMDB popup with movie data
-		document.querySelector('.tmdb-spinner').style.display = 'none';
-		document.querySelector('.tmdb-popup').style.display = 'block';
-
-		document.querySelector('.tmdb-title').innerHTML = movieInfo.title;
-		document.querySelector('.tmdb-year').innerHTML = `(${movieInfo.release_date.substr(0, 4)})`;
-		document.querySelector('.tmdb-titleOrig').innerHTML = movieInfo.original_title;
-		document.querySelector('.tmdb-runtime').innerHTML = `${movieInfo.runtime} perc - `;
-		let genre = [];
-		movieInfo.genres.forEach(item => genre.push(item.name));
-		document.querySelector('.tmdb-genre').innerHTML = genre.join(', ').toLowerCase();
-		document.querySelector('.tmdb-plot-text').innerHTML = movieInfo.overview;
-		document.querySelector('.tmdb-poster').src = `http://image.tmdb.org/t/p/w154${movieInfo.poster_path}`;
-
-		// Fetch credits info from TMDB
- 		let creditsUrl = `https://api.themoviedb.org/3/movie/${tmdbid}/credits?api_key=44e45b401447defd78533a2105a91b82`;
-		return fetch(creditsUrl)
-
-	})
-	// Populate TMDB popup with credits data
-	.then(response => response.json())
-	.then((creditsInfo) => {
-		// Get director(s) array
-		let director = [];
-		creditsInfo.crew.forEach(item => {
-			if (item.job === 'Director') director.push(item.name);
-		});
-		document.querySelector('.tmdb-director').innerHTML = `rendező: ${director.join(', ')}`;
-		// Get actors array
-		creditsInfo.cast.sort((a, b) => {
-			return a.order - b.order;
-		})
-		let actors = creditsInfo.cast.map(actor => actor.name).slice(0, 10);
-		document.querySelector('.tmdb-stars').innerHTML = `szereplők: ${actors.join(', ')}`;
-	})
-	.catch((err) => {
-		alert('Hohó, valami hiba történt!\n' + err);
-		closeTmdbPopup();
-	});
- 
-
 };
 
