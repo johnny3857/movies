@@ -101,7 +101,8 @@ function listitemClickHandler (e) {
 		return;
 	};
 	// Otherwise fetch and display movie data from tmdb API
-	getMovieInfo(tmdbid, false);
+	const searchFlag = false;
+	getMovieInfo(tmdbid, searchFlag);
 };
 
 /***************************************************************************/

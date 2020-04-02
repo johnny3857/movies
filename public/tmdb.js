@@ -1,5 +1,8 @@
 /***************************************************/
 /***********        TMDB features        ***********/
+const tmdbBaseUrl = 'https://api.themoviedb.org/3/';
+const tmdbImgBaseUrl = 'http://image.tmdb.org/t/p/';
+const tmdbAPIKey = '44e45b401447defd78533a2105a91b82';
 
 // Close the TMDB movie info popup (& reset spinner)
 function closeTmdbPopup(searchFlag) {
@@ -20,7 +23,7 @@ function getMovieInfo(tmdbid, searchFlag) {
 	document.querySelector('.tmdb-spinner').style.display = 'block';
 	document.querySelector('.tmdb-wrapper').style.display = 'block';
 	// Fetch movie info from TMDB API
-	let movieUrl = `https://api.themoviedb.org/3/movie/${tmdbid}?api_key=44e45b401447defd78533a2105a91b82&language=hu`;
+	let movieUrl = `${tmdbBaseUrl}movie/${tmdbid}?api_key=${tmdbAPIKey}&language=hu`;
 	fetch(movieUrl)
 		.then(response => response.json())
 		.then(movieInfo => {
@@ -37,10 +40,15 @@ function getMovieInfo(tmdbid, searchFlag) {
 			movieInfo.genres.forEach(item => genre.push(item.name));
 			document.querySelector('.tmdb-genre').innerHTML = genre.join(', ').toLowerCase();
 			document.querySelector('.tmdb-plot-text').innerHTML = movieInfo.overview;
-			document.querySelector('.tmdb-poster').src = `http://image.tmdb.org/t/p/w154${movieInfo.poster_path}`;
+			// Check for missing poster and provide fallback image
+			if (movieInfo.poster_path === null) {
+				document.querySelector('.tmdb-poster').src = 'no_poster-m.jpg'
+			} else {
+				document.querySelector('.tmdb-poster').src = `${tmdbImgBaseUrl}w154${movieInfo.poster_path}`;
+			};
 
 			// Fetch credits info from TMDB
-			let creditsUrl = `https://api.themoviedb.org/3/movie/${tmdbid}/credits?api_key=44e45b401447defd78533a2105a91b82`;
+			let creditsUrl = `${tmdbBaseUrl}movie/${tmdbid}/credits?api_key=${tmdbAPIKey}`;
 			return fetch(creditsUrl)
 		})
 		// Populate TMDB popup with credits data
@@ -72,7 +80,7 @@ function getMovieInfo(tmdbid, searchFlag) {
 };
 /************************************************************************************/
 // Search for movies with TMDB API on Add Movie page
-function searchTMDB () {
+function searchTMDB (pageNr) {
 	// Get movie title search string from input boxes if not empty
 	const inputTitle = document.querySelector('.input-add-title');
 	const inputTitleOrig = document.querySelector('.input-add-titleOrig');
@@ -92,7 +100,7 @@ function searchTMDB () {
 	document.querySelector('.tmdb-spinner').style.display = 'block';
 	
 	//Send query to server
-	fetch('/searchtmdb?searchtext=' + searchText)
+	fetch('/searchtmdb?searchtext=' + searchText + '&pagenr=' + pageNr)
 	.then(response => response.json())
 	.then(movieResults => {
 		// Alert if error
@@ -103,22 +111,31 @@ function searchTMDB () {
 		if (movieResults.total_results == 0) {
 			document.querySelector('.tmdb-wrapper').style.display = 'none';
 			return alert('Sajnálom.\n\nNincs találat.');
-		}; 
+		};
+
 		// Hide spinner & display TMDB search popup
 		document.querySelector('.tmdb-spinner').style.display = 'none';
 		document.querySelector('.search-popup').style.display = 'block';
 		// Populate search popup with results
 		let resultTab = `<div class="search-tab">
 							<div class="search-res-nr">találatok: ${movieResults.total_results}</div>
-							<div class="search-res-pages">
-								<div class="search-res-prev"><<</div>
+							<div class="search-res-pages" data-page="${movieResults.page}" data-totalpages="${movieResults.total_pages}">
+								<div class="search-res-prev ${(movieResults.page == 1) ? 'hide' : ''}"><<</div>
 								<div class="search-res-pageNr">oldal: ${movieResults.page} / ${movieResults.total_pages}</div>
-								<div class="search-res-next">>></div>
+								<div class="search-res-next ${(movieResults.page == movieResults.total_pages) ? 'hide' : ''}">>></div>
 							</div>
 							<div class="search-res-close">&times;</div>
 						</div>`;
 
 		let resultList = movieResults.results.map((movie) => {
+			// Sanitize results (null, undefined)
+			if (movie.release_date === undefined || movie.release_date === null || movie.release_date === '') {
+				movie.release_date = '-';
+				console.log(`release_date is undefined or null: ' ${movie.title} (id: ${movie.id})`);
+			};
+			// Check for missing poster_path and replace with fallback image
+			const posterSource = (movie.poster_path === null) ? 'no_poster-s.jpg' : `${tmdbImgBaseUrl}w92${movie.poster_path}`;
+
 			let listItem =`
 			<div class="search-li">
 				<div class="search-text">
@@ -129,7 +146,7 @@ function searchTMDB () {
 						<div class="search-btn-add">hozzáad</div>
 					</div>
 				</div>
-				<div class="search-image"><img src="http://image.tmdb.org/t/p/w92${movie.poster_path}" alt="<->"></div>
+				<div class="search-image"><img src="${posterSource}" alt="[-]"></div>
 			</div>`;
 			return listItem;
 		}).join('');
@@ -145,6 +162,18 @@ function searchTMDB () {
 		}));
 		// ADD button
 		document.querySelectorAll('.search-btn-add').forEach(btn => btn.addEventListener('click', fillAddForm));
+		// PREV button
+		document.querySelector('.search-res-prev').addEventListener('click', function (e) {
+			if (this.classList.contains('hide')) return;
+			const actPage = this.parentElement.getAttribute('data-page');
+			searchTMDB(parseInt(actPage) - 1);
+		});
+		// NEXT button
+		document.querySelector('.search-res-next').addEventListener('click', function (e) {
+			if (this.classList.contains('hide')) return;
+			const actPage = this.parentElement.getAttribute('data-page');
+			searchTMDB(parseInt(actPage) + 1);
+		});
 	})
 	.catch(err => {
 		console.log(err);

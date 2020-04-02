@@ -5,7 +5,8 @@ init();
 function init() {
 	// TMDB search button click handler
 	document.querySelector('.btn-tmdb-search').addEventListener('click', e => {
-		searchTMDB();
+		const pageNr = 1;
+		searchTMDB(pageNr);
 	});
 
 };

@@ -59,7 +59,7 @@ app.use(auth);
 app.get('/searchtmdb', (req, res) => {
 	// console.log(req.query.searchtext);
 	const searchText = encodeURIComponent(req.query.searchtext);
-	const tmdbUrl = `https://api.themoviedb.org/3/search/movie?api_key=${myData.tmdbAPIKey}&language=hu&query=${searchText}&page=1&include_adult=false`;
+	const tmdbUrl = `https://api.themoviedb.org/3/search/movie?api_key=${myData.tmdbAPIKey}&language=hu&query=${searchText}&page=${req.query.pagenr}&include_adult=false`;
 	request({ url: tmdbUrl, json: true }, (err, response) => {
 		if (err) {
 			// console.log(err);
