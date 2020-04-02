@@ -184,51 +184,80 @@ h1 {
 .sorting a.active:hover, .filtering a.active:hover {
     cursor: default;
 }
-/***********    form input styles    ***********/
+/*********************    form input styles    **************************/
 form {
-    margin-top: 2rem;
+	margin-top: 2rem;
 }
 label {
-    display: block;
-    font: 1.2rem 'Fira Sans', sans-serif;
-    padding-right: 10px;
+	display: block;
+	font: 1.2rem 'Fira Sans', sans-serif;
+	margin: 1rem 0 .5rem 0;
+	/* padding-right: 10px; */
 }
 .input-add-title, .input-add-titleOrig, .input-add-year, .input-add-tmdbid {
-    margin: .5rem 0 1.5rem 0;
-    font-size: 1.2rem;
+	/* margin: .5rem 0 1.5rem 0; */
+	font-size: 1.2rem;
+	/* border-color:  indigo; */
 }
+.input-add-title, .input-add-titleOrig {
+	width: 100%;
+	max-width: 452px;
+}
+
 .input-add-yeartmdb {
-    display: flex;
-    align-items: flex-end;
+	display: flex;
+	justify-content: space-between;
+	max-width: 500px;
+	align-items: flex-end;
 }
 .input-add-yeartmdb div {
-    padding-right: 2rem;
-    border: 0px solid cyan;
+	padding-right: 2rem;
+	border: 0px solid cyan;
 }
 .submit-buttons {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin-top: .5rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	max-width: 468px;
+	/* margin-top: .5rem; */
 }
 select {
-    font-size: 1.2rem;
-    padding: 2px 5px;
-    min-width: 10rem;
-    height: 2rem;
+	font-size: 120%;
+	font-weight: 600;
+	background-color: rgb(235, 189, 75);
+	color: indigo;
+	border-radius: .5rem;
+	border: 0;
+	padding: .2rem .5rem;
+	min-width: 10rem;
+	height: 2.5rem;
+	margin-right: 3rem;
+
 }
 .add-edit-buttons {
-    display: flex;
+	flex: 1 0 auto;
+	display: flex;
+	justify-content: space-between;
 }
 .btn-add-movie {
-    margin-left: 3rem;
-    font-size: 1.2rem;
-    height: 2rem;
+	/* margin-right: 2rem; */
+	font-size: 1.2rem;
+	height: 2.5rem;
+	background-color: rgb(235, 189, 75);
+	color: indigo;
+	font-size: 120%;
+	font-weight: 600;
+	padding: .2rem .5rem;
+	border-radius: .5rem;
+	border-top: 2px solid rgb(255, 250, 180);
+	border-left: 2px solid rgb(255, 250, 180);
+	border-right: 2px solid rgb(180, 150, 80);
+	border-bottom: 2px solid rgb(180, 150, 80);
 }
-button a, button a:hover, button a:active, button a:visited {
-    color: black;
+.btn-add-movie:hover, button a:hover {
+	color: ivory;
 }
 
 /********************************************/
@@ -410,6 +439,7 @@ button a, button a:hover, button a:active, button a:visited {
 	background-color: rgb(60, 60, 60)
 }
 .search-btn-info:hover, .search-btn-add:hover { color: ivory; cursor: pointer;}
+
 /**********     rules for tablets     *****************************************************/
 @media only screen and (max-width: 700px) {
 
@@ -430,18 +460,7 @@ button a, button a:hover, button a:active, button a:visited {
     width: 22px;
     height: 22px;
 }
-.input-add-title, .input-add-titleOrig {
-    width: 450px;
-}
-select {
-    font-size: 1.2rem;
-    padding: 2px 5px;
-    min-width: 9rem;
-}
-.btn-add-movie {
-    margin-left: 2rem;
-    font-size: 1.2rem;
-}
+
 /***********   TMDB popup   ************/
 .tmdb-popup { top: 12vh; }
 /***********   TMDB search popup   ************/
@@ -493,17 +512,19 @@ select {
 	border-radius: 5px;
 }
 .btn-edit-me, .btn-delete-me { width: 22px; }
-.input-add-title, .input-add-titleOrig { width: 300px; }
-select {
-	font-size: 1.2rem;
-	padding: 2px 3px;
-	min-width: 8rem;
+
+.input-add-title, .input-add-titleOrig {
+	width: 90%;
 }
-.add-edit-buttons { flex-direction: column; }
+select { margin-right: 5vw; }
+
+.add-edit-buttons {
+	flex-direction: column;
+	align-items: center;
+}
 .btn-add-movie {
-	font-size: 1.2rem;
-	margin-left: 2rem;
-	margin-bottom: 1rem;
+	max-width: 10rem;
+	margin-bottom: 2rem;
 }
 /*************    TMDB info popup    **************/
 .tmdb-popup {
