@@ -1,8 +1,6 @@
 /***************************************************/
 /***********        TMDB features        ***********/
-const tmdbBaseUrl = 'https://api.themoviedb.org/3/';
 const tmdbImgBaseUrl = 'http://image.tmdb.org/t/p/';
-const tmdbAPIKey = '44e45b401447defd78533a2105a91b82';
 
 // Close the TMDB movie info popup (& reset spinner)
 function closeTmdbPopup(searchFlag) {
@@ -14,70 +12,48 @@ function closeTmdbPopup(searchFlag) {
 		document.querySelector('.search-popup').style.display = 'block';
 	};
 };
-
-// Fetch and display movie info
+/*********************************************************/
+// Fetch movie and credits info from my server & display them
 function getMovieInfo(tmdbid, searchFlag) {
 	// Display popup wrapper and spinner
 	document.querySelector('.tmdb-popup').style.display = 'none';
 	if (searchFlag) document.querySelector('.search-popup').style.display = 'none';
 	document.querySelector('.tmdb-spinner').style.display = 'block';
 	document.querySelector('.tmdb-wrapper').style.display = 'block';
-	// Fetch movie info from TMDB API
-	let movieUrl = `${tmdbBaseUrl}movie/${tmdbid}?api_key=${tmdbAPIKey}&language=hu`;
-	fetch(movieUrl)
-		.then(response => response.json())
-		.then(movieInfo => {
-			// console.log(movieInfo);
-			// Display and populate TMDB popup with movie data
-			document.querySelector('.tmdb-spinner').style.display = 'none';
-			document.querySelector('.tmdb-popup').style.display = 'block';
 
-			document.querySelector('.tmdb-title').innerHTML = movieInfo.title;
-			document.querySelector('.tmdb-year').innerHTML = `(${movieInfo.release_date.substr(0, 4)})`;
-			document.querySelector('.tmdb-titleOrig').innerHTML = movieInfo.original_title;
-			document.querySelector('.tmdb-runtime').innerHTML = `${movieInfo.runtime || '?'} perc - `;
-			let genre = [];
-			movieInfo.genres.forEach(item => genre.push(item.name));
-			document.querySelector('.tmdb-genre').innerHTML = genre.join(', ').toLowerCase();
-			document.querySelector('.tmdb-plot-text').innerHTML = movieInfo.overview;
-			// Check for missing poster and provide fallback image
-			if (movieInfo.poster_path === null) {
-				document.querySelector('.tmdb-poster').src = 'no_poster-m.jpg'
-			} else {
-				document.querySelector('.tmdb-poster').src = `${tmdbImgBaseUrl}w154${movieInfo.poster_path}`;
-			};
+	// Send GET request to my server to fetch movie info from TMDB
+	fetch(`/getmoviedata?tmdbid=${tmdbid}`)
+	.then(response => response.json())
+	.then(movieData => {
+		// Alert popup if there was an error querying the TMDB server
+		if (movieData.error === true) return alert(`Error querying TMDB server\n\n${movieData.errorText}`)
+		// Display and populate TMDB popup with movie data
+		document.querySelector('.tmdb-spinner').style.display = 'none';
+		document.querySelector('.tmdb-popup').style.display = 'block';
 
-			// Fetch credits info from TMDB
-			let creditsUrl = `${tmdbBaseUrl}movie/${tmdbid}/credits?api_key=${tmdbAPIKey}`;
-			return fetch(creditsUrl)
-		})
-		// Populate TMDB popup with credits data
-		.then(response => response.json())
-		.then((creditsInfo) => {
-			// Get director(s) array
-			let director = [];
-			creditsInfo.crew.forEach(item => {
-				if (item.job === 'Director') director.push(item.name);
-			});
-			// Fill in director
-			document.querySelector('.tmdb-director').innerHTML = `rendező: ${director.join(', ')}`;
-			// Get actors array, sort and truncate to 10
-			creditsInfo.cast.sort((a, b) => {
-				return a.order - b.order;
-			});
-			let actors = creditsInfo.cast.map(actor => actor.name).slice(0, 10);
-			// Fill in actors
-			document.querySelector('.tmdb-stars').innerHTML = `szereplők: ${actors.join(', ')}`;
-			// Extra: set popup close click handler
-			document.querySelector('.tmdb-popup').addEventListener('click', e => {
-				closeTmdbPopup(searchFlag);
-			});
-		})
-		.catch((err) => {
-			alert('Hohó, valami hiba történt!\n' + err);
+		document.querySelector('.tmdb-title').innerHTML = movieData.title;
+		document.querySelector('.tmdb-year').innerHTML = `(${movieData.release_date})`;
+		document.querySelector('.tmdb-titleOrig').innerHTML = movieData.original_title;
+		document.querySelector('.tmdb-runtime').innerHTML = `${movieData.runtime} perc - `;
+		document.querySelector('.tmdb-genre').innerHTML = movieData.genres.join(', ');
+		document.querySelector('.tmdb-plot-text').innerHTML = movieData.overview;
+		document.querySelector('.tmdb-poster').src = movieData.poster_path;
+		// Fill in director
+		document.querySelector('.tmdb-director').innerHTML = `rendező: ${movieData.director.join(', ')}`;
+		// Fill in actors
+		document.querySelector('.tmdb-stars').innerHTML = `szereplők: ${movieData.actors.join(', ')}`;
+		// Extra: set popup close click handler
+		document.querySelector('.tmdb-popup').addEventListener('click', e => {
 			closeTmdbPopup(searchFlag);
 		});
+		// console.log(movieData);
+	})
+	.catch((err) => {
+		alert('Hohó, valami hiba történt!\n' + err);
+		closeTmdbPopup(searchFlag);
+	});
 };
+
 /************************************************************************************/
 // Search for movies with TMDB API on Add Movie page
 function searchTMDB (pageNr) {
@@ -104,9 +80,9 @@ function searchTMDB (pageNr) {
 	.then(response => response.json())
 	.then(movieResults => {
 		// Alert if error
-		if (movieResults.error) {
+		if (movieResults.error === true) {
 			document.querySelector('.tmdb-wrapper').style.display = 'none';
-			return alert('Hiba a TMDB keresés közben.');
+			return alert(`Hiba a TMDB keresés közben.\n\n${movieResults.errorText}`);
 		};
 		if (movieResults.total_results == 0) {
 			document.querySelector('.tmdb-wrapper').style.display = 'none';

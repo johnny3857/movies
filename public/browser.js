@@ -165,8 +165,6 @@ function sortFilterMovies (moviesArr) {
 	if (sortAndFilter.sort === 'year') {
 		return filteredMovies.sort((a, b) => a.year - b.year);
 	};
-	// console.log(sortAndFilter);
-	// console.log(filteredMovies);
 };
 
 // Do the searching

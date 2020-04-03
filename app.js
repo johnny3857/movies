@@ -1,6 +1,6 @@
 const path = require('path');
-// const fs = require('fs');
 const request = require('request');
+const axios = require('axios');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
 const myData = require('./config.js');
@@ -54,22 +54,93 @@ function auth (req, res, next) {
 app.use(auth);
 /***********************************************************/
 /**********************   ROUTES   *************************/
+// GET getmoviedata from TMDB route
+app.get('/getmoviedata', (req, res) => {
+	let movieData = {};
+	const tmdbUrl = `${myData.tmdbBaseUrl}movie/${req.query.tmdbid}?api_key=${myData.tmdbAPIKey}&language=hu`;
+	let creditsUrl = `${myData.tmdbBaseUrl}movie/${req.query.tmdbid}/credits?api_key=${myData.tmdbAPIKey}`;
+	function getMovieInfo() {return axios.get(tmdbUrl)};
+	function getCreditsInfo() {return axios.get(creditsUrl)};
+	axios.all([getMovieInfo(), getCreditsInfo()])
+	.then(axios.spread(function (movie, credits) {
+		// console.log(response.data)
+		// Sanitizing & extracting useful movie data
+		movieData.title = movie.data.title || '(nincs cím)';
+		movieData.original_title = movie.data.original_title || '(nincs cím)';
+		movieData.release_date = movie.data.release_date.substr(0, 4) || '????';
+		movieData.runtime = movie.data.runtime || '?';
+		let genreArr = [];
+		movie.data.genres.forEach(item => genreArr.push(item.name.toLowerCase()));
+		movieData.genres = genreArr;
+		movieData.overview = movie.data.overview;
+		if (movie.data.poster_path === null || movie.data.poster_path === '' || movie.data.poster_path === undefined) {
+			movieData.poster_path = 'no_poster-m.jpg';
+		} else {
+			movieData.poster_path = `${myData.tmdbImgBaseUrl}w154${movie.data.poster_path}`;
+		};
+		// Extracting useful credits data
+		movieData.director = [];
+		credits.data.crew.forEach(item => {
+			if (item.job === 'Director') movieData.director.push(item.name);
+		});
+		
+		movieData.actors = [];
+		credits.data.cast.sort((a, b) => {
+			return a.order - b.order;
+		});
 
-// GET list route
+		movieData.actors = credits.data.cast.map(actor => actor.name).slice(0, 10);
+		res.send(movieData);
+	}))
+	.catch(error => {
+		if (error.response) {
+			// console.log(error.response.data);
+			// console.log(error.response.status);
+			// console.log(error.response.statusText);
+			error.response.data.error = true;
+			error.response.data.errorText = error.response.data.status_message;
+			return res.send(error.response.data);
+		}
+		// else if (error.request) console.log(error.request);
+		// else console.log('Error!', error.message);
+		// consol.log(error.config);
+		res.send({ error: true, errorText: 'Unknown error while querying TMDB server.'} );
+	});
+});
+
+// GET search TMDB route
 app.get('/searchtmdb', (req, res) => {
 	// console.log(req.query.searchtext);
 	const searchText = encodeURIComponent(req.query.searchtext);
-	const tmdbUrl = `https://api.themoviedb.org/3/search/movie?api_key=${myData.tmdbAPIKey}&language=hu&query=${searchText}&page=${req.query.pagenr}&include_adult=false`;
+	const tmdbUrl = `${myData.tmdbBaseUrl}search/movie?api_key=${myData.tmdbAPIKey}&language=hu&query=${searchText}&page=${req.query.pagenr}&include_adult=false`;
+	axios.get(tmdbUrl)
+	.then(response => {
+		res.send(response.data);
+	})
+	.catch(error => {
+		if (error.response) {
+			error.response.data.error = true;
+			error.response.data.errorText = error.response.data.status_message;
+			return res.send(error.response.data);
+		}
+		res.send({ error: true, errorText: 'Unknown error while querying TMDB server.'} );
+	});
+	
+});
+
+/*/ GET search TMDB route
+app.get('/searchtmdb', (req, res) => {
+	// console.log(req.query.searchtext);
+	const searchText = encodeURIComponent(req.query.searchtext);
+	const tmdbUrl = `${myData.tmdbBaseUrl}search/movie?api_key=${myData.tmdbAPIKey}&language=hu&query=${searchText}&page=${req.query.pagenr}&include_adult=false`;
 	request({ url: tmdbUrl, json: true }, (err, response) => {
-		if (err) {
-			// console.log(err);
-			return res.json({error: 'Error'});
-		};
+		if (err) return res.json({error: 'Error'});
 		// console.log(response.body);
 		res.json(response.body);
 	});
 	
 });
+//*/
 
 // GET add new film route
 app.get('/add', (req, res) => {
