@@ -1,5 +1,4 @@
 const path = require('path');
-const request = require('request');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');

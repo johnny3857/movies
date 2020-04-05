@@ -7,9 +7,9 @@
 	<div class="wrapper">
 
 		<div class="sorting">
-			<p>rendezés:</p>
+			<div class="sort-text"><span>rendezés:</span></div>
 			<div class="sort-group">
-				<a class="sort-button active" data-sort="title" href="#">cím</a>
+				<a class="sort-button" data-sort="title" href="#">cím</a>
 				<a class="sort-button" data-sort="titleEng" href="#">eredeti cím</a>
 				<a class="sort-button" data-sort="year" href="#">bemutatás éve</a>
 				<!-- <a class="sort-button active" data-sort="none" href="#">nincs</a> -->
@@ -17,7 +17,7 @@
 		</div>
 
 		<div class="filtering">
-			<p>szűrés:</p>
+			<div class="filter-text"><span>szűrés:</span></div>
 			<div class="filter-group">
 				<a class="filter-button" data-filter="wanted" href="#">kell</a>
 				<a class="filter-button" data-filter="downloaded" href="#">letöltve</a>
@@ -26,9 +26,9 @@
 			</div>
 		</div>
 
-		<div class="results">
+	<!-- 	<div class="results">
 			<p>találatok száma: <span class="nr-of-results"></span></p>
-		</div>
+		</div> -->
 		<% if (movies.length === 0) { %>
 		<h2>Nincs ilyen film.</h2>
 		<% } else { %>
@@ -68,6 +68,20 @@
 
 		</div>
 	</div>
+
+	<div class="btn-prev"></div>
+	<div class="btn-next"></div>
+	<div class="list-tab">
+		<div class="list-res-nr">találatok: 1-20 / 58</div>
+		<div class="list-res-pages">oldal: 1 / 3</div>
+	</div>
+
+<!-- 	<div class="pages-wrapper">
+		<div class="btns-prev-next">
+			<div class="btn-prev"></div>
+			<div class="btn-next"></div>
+		</div>
+	</div> -->
 
 	<script src="/browser.js"></script>
 	<script src="/tmdb.js"></script>

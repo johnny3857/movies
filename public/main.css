@@ -13,18 +13,20 @@ body {
 }
 a { color: indigo; }
 /********   NAVBAR   *********/
-.navbar {
-    background-color: rgb(235, 189, 75);  /*goldenrod;*/
-    color: indigo;
-    height: 4rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+nav {
+	background-color: rgb(235, 189, 75);  /*goldenrod;*/
+	color: indigo;
 }
-
+.navbar {
+	height: 4rem;
+	max-width: 700px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+}
 .navbar li {
-    margin-left: 2vw;
+    /* margin-left: 2vw; */
     border: 0px solid red;
 }
 .navbar a {
@@ -51,10 +53,19 @@ a { color: indigo; }
 a.btn-reset-search {
     background-color: indigo;
     color: rgb(235, 189, 75);
-    padding: .1rem .5rem .2rem .5rem;
+    padding: .1rem .5rem .1rem .5rem;
     border: 2px solid indigo;
     border-radius: 2rem;
-    cursor: pointer;
+	cursor: pointer;
+}
+.tmdb-search-logo {
+	background-image: url('tmdb-short2.svg');
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 15vw;
+	min-width: 100px;
+	height: 2rem;
+	border: 0px solid magenta;
 }
 /*************************************/
 h1 {
@@ -65,7 +76,8 @@ h1 {
 }
 
 .wrapper {
-    padding: 1rem 2rem;
+	padding: 1rem 2rem;
+	margin-bottom: 2rem;
 }
 .wrapper ul {
     border: 2px solid indigo;
@@ -136,53 +148,98 @@ h1 {
     width: 30px;
 }
 /***********    SORTING and FILTERING    ***********/
-.sorting, .filtering, .results {
+.sorting, .filtering {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 1rem;
+		margin-bottom: 1rem;
 }
-.sorting p, .filtering p, .results p {
-    font-size: 120%;
-    border: 0px solid greenyellow;
+.sort-text, .filter-text {
+	font-size: 120%;
+	border: 0px solid greenyellow;
 }
 .sort-group, .filter-group {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-    margin-left: 1rem;
-    border: 2px solid indigo;
-    border-radius: .5rem;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: stretch;
+	margin-left: 1rem;
+	border: 2px solid indigo;
+	border-radius: .5rem;
+	background-color: rgb(235, 189, 75);  /*goldenrod;*/
+	color: indigo;
 }
 .sort-button, .filter-button {
-    background-color: rgb(235, 189, 75);  /*goldenrod;*/
-    color: indigo;
-    padding: .3rem .5rem;
-    font-weight: 600;
-    font-size: 120%;
-    border-right: 2px solid indigo;
-    height: 100%;
+	padding: .3rem .5rem;
+	font-weight: 600;
+	font-size: 120%;
+	border-left: 2px solid indigo;
+	height: 100%;
+	align-self: stretch;
 }
 .sort-button:first-of-type, .filter-button:first-of-type {
-    border-top-left-radius: .4rem;
-    border-bottom-left-radius: .4rem;
+	border-top-left-radius: .4rem;
+	border-bottom-left-radius: .4rem;
+	border-left: 0;
 }
 .sort-button:last-of-type, .filter-button:last-of-type {
-    border-top-right-radius: .4rem;
-    border-bottom-right-radius: .4rem;
-    border-right: 0;
+	border-top-right-radius: .4rem;
+	border-bottom-right-radius: .4rem;
+	
 }
 .sort-group a:hover, .filter-group a:hover,
 .sort-group a.active, .filter-group a.active {
-    background-color: indigo;
-    color: rgb(235, 189, 75);
+	background-color: indigo;
+	color: rgb(235, 189, 75);
 }
-.sorting a.active:hover, .filtering a.active:hover {
-    cursor: default;
+.sorting a.active:hover, .filtering a.active:hover { cursor: default; }
+/*************************     PAGINATION     *************************/
+.pages-wrapper {
+	/* display: none; */
+	position: fixed;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	border: 0px solid red;
+}
+.btns-prev-next {
+	margin: 50vh auto auto auto;
+	max-width: 1400px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.btn-prev, .btn-next {
+	position: fixed;
+	top: 50vh;
+	width: 60px;
+	height: 60px;
+	background-size: contain;
+	cursor: pointer;
+	border: 0px solid magenta;
+}
+.btn-prev { left: -10px; background-image: url('prev-s.gif'); }
+.btn-next { right: -10px; background-image: url('next-s.gif'); }
+
+.list-tab {
+	position: fixed;
+	left: 0; right: 0;
+	bottom: 0;
+	height: 2rem;
+	background-color: rgb(40, 40, 40);
+	color: ivory;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+.list-res-nr, .list-res-pages {
+	font-size: 100%;
+	font-weight: 600;
+	padding: .5rem;
+	border: 0px solid magenta;
 }
 /*********************    form input styles    **************************/
 form {
@@ -234,7 +291,6 @@ select {
 	min-width: 10rem;
 	height: 2.5rem;
 	margin-right: 3rem;
-
 }
 .add-edit-buttons {
 	flex: 1 0 auto;
@@ -253,8 +309,8 @@ select {
 	border-radius: .5rem;
 	border-top: 2px solid rgb(255, 250, 180);
 	border-left: 2px solid rgb(255, 250, 180);
-	border-right: 2px solid rgb(180, 150, 80);
-	border-bottom: 2px solid rgb(180, 150, 80);
+	border-right: 1px solid rgb(180, 150, 80);
+	border-bottom: 1px solid rgb(180, 150, 80);
 }
 .btn-add-movie:hover, button a:hover {
 	color: ivory;
@@ -280,7 +336,7 @@ select {
 .tmdb-spinner img {
 	width: 100%;
 }
-.tmdb-popup, .search-popup {
+.tmdb-popup {
 	display: none;
 	position: relative;
 	background-color: rgba(40, 40, 40, .9);
@@ -298,7 +354,6 @@ select {
 	border-radius: 1rem;
 	overflow-y: auto;
 	border: 0px solid greenyellow;
-	
 }
 .tmdb-popup {
 	width: 90vw;
@@ -344,29 +399,41 @@ select {
 /********************************************/
 /********     TMDB search styles     *********/
 .search-popup {
-	/* top: 12vh; */
+	display: none;
+	position: relative;
+	background-color: rgba(40, 40, 40, .9);
+	color: ivory;
+	margin: 0 auto;
 	width: 70vw;
-	/* margin: auto; */
+	max-width: 700px;
+	top: 12vh;
 	max-height: 80vh;
 	padding: 0;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+	border-radius: 1rem;
+	overflow-y: auto;
+	border: 0px solid greenyellow;
 }
 .search-tab {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0.3rem 0;
+	padding: .3rem 0;
 	font-size: 120%;
-	/* font-weight: 600; */
+	font-weight: 600;
 	position: fixed;
 	background-color: rgb(40, 40, 40);
 	border-top-left-radius: .8rem; border-top-right-radius: .8rem;
 	width: 70vw;
 	max-width: 700px;
-	
 }
 .search-tab div { border: 0px solid yellow; }
-.search-res-nr { margin-left: .5rem; }
+.search-res-nr { margin-left: 1rem; }
 .search-res-pages {
 	display: flex;
 	flex-direction: row;
@@ -465,7 +532,7 @@ select {
 .tmdb-popup { top: 12vh; }
 /***********   TMDB search popup   ************/
 .search-popup {
-	top: 10vh;
+	top: 9vh;
 	max-height: 85vh;
 	width: 80vw;
 }
@@ -486,22 +553,31 @@ select {
 /**********     rules for mobile phones     **********/
 @media only screen and (max-width: 520px) {
 .wrapper {
-    padding: .5rem .5rem;
+	padding: .5rem .5rem;
 }
-.sorting, .filtering, .results {
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 0 0 .3rem 0;
-    border: 0px solid red;
+.sorting, .filtering {
+	/* flex-direction: column; */
+	/* align-items: flex-start; */
+	margin: 0 0 .3rem 0;
+	border: 0px solid red;
 }
-.sorting p, .filtering p, .results p {
-    font-size: 100%;
-    border: 0px solid greenyellow;
+/* .sort-text, .filter-text { font-size: 100%; } */
+.sort-text span, .filter-text span { display: none; }
+.sort-text, .filter-text {
+	background-image: url('sort-s.png');
+	background-size: contain;
+	width: 24px;
+	height: 24px;
+	margin-right: 1vw;
+	min-width: 24px;
+}
+.filter-text {
+	background-image: url('filter-s.png');
 }
 .sort-group, .filter-group { margin: .2rem 0 0 0;}
 .sort-button, .filter-button {
-    padding: .3rem .5rem;
-    font-size: 100%;
+	padding: .3rem .5rem;
+	font-size: 90%;
 }
 
 .listitem-buttons { flex-direction: column; }
@@ -544,12 +620,12 @@ select { margin-right: 5vw; }
 .tmdb-stars { font-size: 80%; }
 /**************      TMDB search popup     ***************/
 .search-popup {
-	top: 7vh;
-	max-height: 82vh;
+	top: 3vh;
+	max-height: 85vh;
 	width: 90vw;
 }
 .search-tab {
-	font-size: 90%;
+	font-size: 80%;
 	width: 90vw;
 }
 .search-li:nth-of-type(2) { margin-top: 32px; }
