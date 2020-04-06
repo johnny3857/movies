@@ -26,14 +26,19 @@ function getMovieInfo(tmdbid, searchFlag) {
 	.then(response => response.json())
 	.then(movieData => {
 		// Alert popup if there was an error querying the TMDB server
-		if (movieData.error === true) return alert(`Error querying TMDB server\n\n${movieData.errorText}`)
+		if (movieData.error === true) {
+			alert(`Error querying TMDB server\n\n${movieData.errorText}`);
+			closeTmdbPopup(searchFlag);
+			return;
+		};
 		// Display and populate TMDB popup with movie data
 		document.querySelector('.tmdb-spinner').style.display = 'none';
 		document.querySelector('.tmdb-popup').style.display = 'block';
 
 		document.querySelector('.tmdb-title').innerHTML = movieData.title;
 		document.querySelector('.tmdb-year').innerHTML = `(${movieData.release_date})`;
-		document.querySelector('.tmdb-titleOrig').innerHTML = movieData.original_title;
+		document.querySelector('.tmdb-rating').innerHTML = movieData.rating;
+		document.querySelector('.tmdb-titleOrig').innerHTML = `${movieData.original_title}   (${movieData.prod_countries.join('-')})`;
 		document.querySelector('.tmdb-runtime').innerHTML = `${movieData.runtime} perc - `;
 		document.querySelector('.tmdb-genre').innerHTML = movieData.genres.join(', ');
 		document.querySelector('.tmdb-plot-text').innerHTML = movieData.overview;
@@ -105,9 +110,10 @@ function searchTMDB (pageNr) {
 
 		let resultList = movieResults.results.map((movie) => {
 			// Sanitize results (null, undefined)
-			if (movie.release_date === undefined || movie.release_date === null || movie.release_date === '') {
+			// if (movie.release_date === undefined || movie.release_date === null || movie.release_date === '') {
+			if (!movie.release_date) {
 				movie.release_date = '-';
-				console.log(`release_date is undefined or null: ' ${movie.title} (id: ${movie.id})`);
+				// console.log(`release_date is undefined or null: ' ${movie.title} (id: ${movie.id})`);
 			};
 			// Check for missing poster_path and replace with fallback image
 			const posterSource = (movie.poster_path === null) ? 'no_poster-s.jpg' : `${tmdbImgBaseUrl}w92${movie.poster_path}`;

@@ -5,6 +5,11 @@ let sortAndFilter = {
 let allMoviesArr, foundMoviesArr = [];
 let searchText = '';
 let maxMoviePerPage = 20;
+const statusNames = {
+	wanted: 'kell',
+	downloaded: 'letöltve',
+	seen: 'megnézve'
+};
 init();
 
 // Click handlers attached to global document object
@@ -132,7 +137,7 @@ function populateList (pageNr = 1) {
 		let listItem =`
 		<li>
 			<div class="listitem-text" data-tmdbid="${movie.tmdbid}">
-				<p><span class="movie-title">${movie.title}</span> (${movie.year})<span class="movie-status">${movie.status}</span></p>
+				<p><span class="movie-title">${movie.title}</span> (${movie.year})<span class="movie-status">${statusNames[movie.status]}</span></p>
 				<p>${movie.titleEng}</p>
 			</div>
 			<div class="listitem-buttons">
@@ -145,8 +150,6 @@ function populateList (pageNr = 1) {
 
 	document.querySelector('.list-movies').innerHTML = moviesList;
 
-	// Replace status names (English --> Hungarian)
-	replaceStatus();
 	// Listitem click handlers must be set each time after showing the list
 	initAfterFetch();
 };
@@ -214,16 +217,4 @@ function searchMovies () {
 	populateList();
 };
 
-// Replace English status words with Hungarian ones
-function replaceStatus() {
-	let statusArr = document.querySelectorAll('.movie-status');
-	const statusNames = {
-		wanted: 'kell',
-		downloaded: 'letöltve',
-		seen: 'megnézve'
-	};
-	statusArr.forEach((item) => {
-		item.innerHTML = ' - ' + statusNames[item.innerHTML];
-	});
-};
 

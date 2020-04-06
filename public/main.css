@@ -120,8 +120,15 @@ h1 {
     border: 0px solid red;
 }
 .movie-status {
-    font-weight: 400;
-    color: indigo;
+	font-size: 80%;
+    font-weight: 800;
+	background-color: rgb(235, 189, 75);
+	/* background-color: rgb(66, 56, 153); */
+	border-radius: 1rem;
+	padding: .1rem .5rem;
+	margin-left: 1rem;
+	color: indigo;
+	vertical-align: middle;
 }
 .listitem-buttons {
     display: flex;
@@ -367,11 +374,12 @@ select {
     font-size: 150%;
     font-weight: 600;
 }
-.tmdb-year {
+.tmdb-year, .tmdb-rating {
     font-size: 120%;
     font-weight: 400;
     padding-left: 1rem;
 }
+.tmdb-rating { font-weight: 600; }
 /* .tmdb-ty { flex: 1 1 auto; } */
 .tmdb-ty { padding: .2rem .2rem 0 1rem; }
 .tmdb-titleOrig {
@@ -568,7 +576,7 @@ select {
 	background-size: contain;
 	width: 24px;
 	height: 24px;
-	margin-right: 1vw;
+	margin-right: 2vw;
 	min-width: 24px;
 }
 .filter-text {
@@ -580,6 +588,9 @@ select {
 	font-size: 90%;
 }
 
+.movie-status {
+	font-size: 70%;
+}
 .listitem-buttons { flex-direction: column; }
 
 .edit-me, .delete-me {
@@ -610,6 +621,7 @@ select { margin-right: 5vw; }
 .tmdb-first-row { padding-top: .2rem;}
 .tmdb-title { font-size: 120%; }
 .tmdb-year { font-size: 100%; }
+.tmdb-rating { font-size: 100%; }
 .tmdb-titleOrig { font-size: 100%; }
 .tmdb-tg { font-size: 90%; }
 .tmdb-plot-text { font-size: 85%; }

@@ -72,11 +72,16 @@ app.get('/getmoviedata', (req, res) => {
 		movie.data.genres.forEach(item => genreArr.push(item.name.toLowerCase()));
 		movieData.genres = genreArr;
 		movieData.overview = movie.data.overview;
-		if (movie.data.poster_path === null || movie.data.poster_path === '' || movie.data.poster_path === undefined) {
+		// if (movie.data.poster_path === null || movie.data.poster_path === '' || movie.data.poster_path === undefined) {
+		if (!movie.data.poster_path) {
 			movieData.poster_path = 'no_poster-m.jpg';
 		} else {
 			movieData.poster_path = `${myData.tmdbImgBaseUrl}w154${movie.data.poster_path}`;
 		};
+		let countriesArr = [];
+		movie.data.production_countries.forEach(country => countriesArr.push(country.iso_3166_1));
+		movieData.prod_countries = countriesArr;
+		movieData.rating = movie.data.vote_average;
 		// Extracting useful credits data
 		movieData.director = [];
 		credits.data.crew.forEach(item => {
@@ -159,7 +164,7 @@ app.post('/add', (req, res) => {
 			status: req.body.status,
 			tmdbid: req.body.tmdbid
 		}, function () {
-			res.redirect('/');
+			res.redirect('/add');
 	});
 });
 
