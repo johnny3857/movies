@@ -2,16 +2,7 @@
 /***********        TMDB features        ***********/
 const tmdbImgBaseUrl = 'http://image.tmdb.org/t/p/';
 
-// Close the TMDB movie info popup (& reset spinner)
-function closeTmdbPopup(searchFlag) {
-	document.querySelector('.tmdb-popup').style.display = 'none';
-	if (searchFlag == false) {
-		document.querySelector('.tmdb-spinner').style.display = 'block';
-		document.querySelector('.tmdb-wrapper').style.display = 'none';
-	} else {
-		document.querySelector('.search-popup').style.display = 'block';
-	};
-};
+
 /*********************************************************/
 // Fetch movie and credits info from my server & display them
 function getMovieInfo(tmdbid, searchFlag) {
@@ -20,6 +11,8 @@ function getMovieInfo(tmdbid, searchFlag) {
 	if (searchFlag) document.querySelector('.search-popup').style.display = 'none';
 	document.querySelector('.tmdb-spinner').style.display = 'block';
 	document.querySelector('.tmdb-wrapper').style.display = 'block';
+	// Hide pagination arrows and tab on main movie list page
+	if (!searchFlag) document.querySelector('.pages-wrapper').style.display = 'none';
 
 	// Send GET request to my server to fetch movie info from TMDB
 	fetch(`/getmoviedata?tmdbid=${tmdbid}`)
@@ -162,7 +155,21 @@ function searchTMDB (pageNr) {
 		closeSearchPopup();
 	})
 };
+/************************************************************************************/
+// Close the TMDB movie info popup (& reset spinner)
+function closeTmdbPopup(searchFlag) {
+	document.querySelector('.tmdb-popup').style.display = 'none';
+	if (!searchFlag) {
+		document.querySelector('.tmdb-spinner').style.display = 'block';
+		document.querySelector('.tmdb-wrapper').style.display = 'none';
+		// Show pagination arrows and tab
+		document.querySelector('.pages-wrapper').style.display = 'block';
+	} else {
+		document.querySelector('.search-popup').style.display = 'block';
+	};
+};
 
+// Close the TMDB search results popup
 function closeSearchPopup(e) {
 	document.querySelector('.search-popup').style.display = 'none';
 	document.querySelector('.tmdb-spinner').style.display = 'block';
