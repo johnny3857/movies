@@ -163,10 +163,6 @@ function sortFilterMovies () {
 		filteredMovies = foundMoviesArr.filter(movie => movie.status === sortAndFilter.filter);
 	};
 	// Now comes the sorting
-/* 	if (sortAndFilter.sort === 'none') {
-		// console.log(sortAndFilter);
-		return filteredMovies;
-	}; */
 	if (sortAndFilter.sort === 'title') {
 		filteredMovies.sort(function (a, b) {
 			if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
